@@ -59,12 +59,14 @@
 
 <div align="center">
 
-<img height="165" src="https://github-readme-stats-sigma-five.vercel.app/api?username=ArturoYi&show_icons=true&theme=radical&hide_border=true&bg_color=0d1117&title_color=4158D0&icon_color=C850C0&text_color=c9d1d9" alt="stats" />
-<img height="165" src="https://streak-stats.demolab.com/?user=ArturoYi&theme=radical&hide_border=true&background=0d1117&ring=4158D0&fire=C850C0" alt="streak" />
+[![Followers](https://img.shields.io/github/followers/ArturoYi?style=for-the-badge&logo=github&label=Followers&color=4158D0)](https://github.com/ArturoYi?tab=followers)
+[![Following](https://img.shields.io/github/following/ArturoYi?style=for-the-badge&logo=github&label=Following&color=4158D0)](https://github.com/ArturoYi?tab=following)
+[![Public Repos](https://img.shields.io/github/public-repos/ArturoYi?style=for-the-badge&logo=github&label=Public%20Repos&color=4158D0)](https://github.com/ArturoYi?tab=repositories)
+[![Stars](https://img.shields.io/github/stars/ArturoYi?style=for-the-badge&logo=github&label=Stars&color=4158D0)](https://github.com/ArturoYi?tab=stars)
 
-<br />
+<br /><br />
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=ArturoYi&theme=react&hide_border=true&bg_color=0d1117&color=4158D0&line=C850C0&point=ffffff&area=true" alt="activity" />
+<img src="https://ghchart.rshah.org/ArturoYi" alt="GitHub contribution chart" />
 
 </div>
 
