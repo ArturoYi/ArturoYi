@@ -1,5 +1,7 @@
-# 单包项目勿写 packages: ['.']，否则 IDE/TS 易按 monorepo 解析，Nuxt 全局类型会异常。
-# allowBuilds 在 pnpm 11 仍配置在此文件（见 https://pnpm.io/settings/build）
+# 存在本文件时 pnpm 10+ 要求 packages 非空（CI 会 pnpm install --frozen-lockfile）
+packages:
+  - "."
+
 allowBuilds:
   better-sqlite3: true
   esbuild: true
