@@ -1,6 +1,12 @@
 import { proseCodeIcons } from "./config/prose-code-icons";
 
 export default defineNuxtConfig({
+  // content-categories 模块会在 setup 中覆盖 contentCategoryStems
+  runtimeConfig: {
+    public: {
+      contentCategoryStems: [],
+    },
+  },
   // 继承 Docus 文档主题，获得文档站点预设布局与组件
   extends: ["docus"],
 
@@ -29,6 +35,8 @@ export default defineNuxtConfig({
 
   // 自定义 Nuxt 模块
   modules: [
+    // 扫描 content 一级目录的 .navigation.yml，写入 runtimeConfig
+    "./modules/content-categories",
     // 草稿过滤：frontmatter 中 draft: true 的文档不进入导航
     function draftFilterModule(_options, nuxt) {
       // Content 注册此 hook 于 NuxtHooks；Nuxt.hooks 类型为 NuxtHooks$1
@@ -47,8 +55,6 @@ export default defineNuxtConfig({
   routeRules: {
     // 默认所有路由静态预渲染
     "/**": { prerender: true },
-    // 草稿示例页不预渲染，且禁止搜索引擎索引
-    "/guide/draft-example": { prerender: false, robots: false },
   },
 
   // @nuxt/content 内容模块配置
@@ -103,11 +109,11 @@ export default defineNuxtConfig({
   // @nuxt/icon 图标模块配置
   icon: {
     clientBundle: {
-      // 预打包图标到客户端 bundle，避免运行时按需加载
-      // socials 用 i-simple-icons-${key} 动态拼接，scan 无法发现，需手动列入
-      icons: [
-        ...proseCodeIcons,
-      ],
+      // 与 docus 默认一致：扫描 app 模板中的 i-* 类名；勿仅用 icons 覆盖以免丢失 scan
+      scan: true,
+      includeCustomCollections: true,
+      // 动态来源图标（prose 文件名映射、.navigation.yml、socials 拼接等）scan 扫不到
+      icons: [...proseCodeIcons],
     },
   },
 

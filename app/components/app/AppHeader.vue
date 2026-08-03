@@ -4,7 +4,7 @@ const { forced: forcedColorMode } = useDocusColorMode();
 
 const { isEnabled: isAssistantEnabled } = useAssistant();
 const { isEnabled, locales } = useDocusI18n();
-const { subNavigationMode } = useSubNavigation();
+const { subNavigationMode, showMobileHeaderNav } = useSubNavigation();
 
 const links = computed(() =>
   appConfig.github && appConfig.github.url
@@ -73,7 +73,8 @@ const links = computed(() =>
       </template>
     </template>
 
-    <template #toggle="{ open, toggle }">
+    <!-- 归档页：分类 Tab；文档页：当前栏目目录树 -->
+    <template v-if="showMobileHeaderNav" #toggle="{ open, toggle }">
       <IconMenuToggle :open="open" class="lg:hidden" @click="toggle" />
     </template>
 
@@ -81,6 +82,7 @@ const links = computed(() =>
       <AppHeaderBody />
     </template>
 
+    <!-- 仅 archive（/articles）展示分类 Tab，文档页不展示 -->
     <template v-if="subNavigationMode === 'header'" #bottom>
       <AppHeaderBottom />
     </template>

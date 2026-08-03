@@ -17,8 +17,12 @@ export default defineAppConfig({
 
   // 导航栏布局配置
   navigation: {
-    // 子导航位置：header（顶部）| aside（侧边栏）
+    // sub=header 时 AppHeaderBottom 挂在顶栏；仅 archive 布局启用
     sub: "header",
+    // 归档页 Tab 首位：集合内所有 md
+    allLabel: "全部",
+    allIcon: "i-lucide-library",
+    articlesPath: "/articles",
   },
 
   // 全局 SEO 元信息
@@ -53,10 +57,10 @@ export default defineAppConfig({
 
   // 页脚/侧栏社交链接，键名对应图标（i-simple-icons-${key}）
   socials: {
-    github: "",
-    x: "https://x.com/nuxt_js",
-    discord: "https://discord.com/invite/ps2h6QT",
-    nuxt: "https://nuxt.com",
+    github: "https://github.com/ArturoYi",
+    // x: "https://x.com/nuxt_js",
+    // discord: "https://discord.com/invite/ps2h6QT",
+    // nuxt: "https://nuxt.com",
   },
 
   // 文章目录（Table of Contents）配置

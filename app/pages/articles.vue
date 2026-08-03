@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Collections } from "@nuxt/content";
+import { articleMatchesCategoryStem } from "../utils/category-tabs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,14 +24,19 @@ function isArticlePage(page: ArticlePreview): boolean {
   return lastStemSegment !== "index";
 }
 
+const route = useRoute();
+const { activeCategoryStem } = useSubNavigation();
+
 function paginationTo(page: number) {
-  if (page <= 1) {
+  const cat = typeof route.query.cat === "string" ? route.query.cat : undefined;
+  const query: Record<string, string> = {};
+  if (page > 1) query.page = String(page);
+  if (cat) query.cat = cat;
+  if (page <= 1 && !cat) {
     return { path: "/articles" };
   }
-  return { path: "/articles", query: { page: String(page) } };
+  return { path: "/articles", query };
 }
-
-const route = useRoute();
 
 const { data: pages } = await useAsyncData("articles-all", () =>
   queryCollection("docs")
@@ -45,7 +51,14 @@ const articles = computed(() =>
     .sort((a, b) => (a.stem ?? "").localeCompare(b.stem ?? "", "zh-CN")),
 );
 
-const totalCount = computed(() => articles.value.length);
+/** 「全部」Tab：所有 md；?cat= 只筛某一栏目 */
+const filteredArticles = computed(() => {
+  const stem = activeCategoryStem.value;
+  if (!stem) return articles.value;
+  return articles.value.filter((a) => articleMatchesCategoryStem(a.stem, stem));
+});
+
+const totalCount = computed(() => filteredArticles.value.length);
 
 const pageCount = computed(() =>
   Math.max(1, Math.ceil(totalCount.value / ITEMS_PER_PAGE)),
@@ -59,50 +72,46 @@ const currentPage = computed(() => {
 
 const paginatedArticles = computed(() => {
   const start = (currentPage.value - 1) * ITEMS_PER_PAGE;
-  return articles.value.slice(start, start + ITEMS_PER_PAGE);
+  return filteredArticles.value.slice(start, start + ITEMS_PER_PAGE);
 });
+
+/** 全部 Tab 进入文档加 scope=all（无侧栏）；栏目 Tab 进入保留栏目侧栏 */
+function articleTo(article: ArticlePreview) {
+  if (activeCategoryStem.value) {
+    return article.path;
+  }
+  return { path: article.path, query: { scope: "all" } };
+}
 
 useSeo({
   title: "文章列表",
-  description: "content 目录下全部文章归档",
+  description: "全部 Markdown 文档归档",
   type: "website",
 });
 </script>
 
 <template>
   <UPage>
-    <UPageHeader
-      title="文章列表"
-      :description="`共 ${totalCount} 篇（不含 index.md 与导航配置）`"
-    />
+    <UPageHeader :description="`共 ${totalCount} 篇`" />
 
     <UPageBody>
-      <div v-if="!articles.length" class="text-muted text-sm">暂无文章。</div>
+      <div v-if="!filteredArticles.length" class="text-muted text-sm">
+        暂无文章。
+      </div>
 
       <template v-else>
-        <ul class="space-y-3">
-          <li
+        <!-- 列表 key 用 stem：纯中文文件名 slugify 后 path 可能重复 -->
+        <div class="flex flex-col gap-3">
+          <UPageCard
             v-for="article in paginatedArticles"
-            :key="article.path"
-            class="border border-default rounded-lg px-4 py-3 hover:bg-elevated/50 transition-colors"
-          >
-            <NuxtLink
-              :to="article.path"
-              class="font-medium text-highlighted hover:underline"
-            >
-              {{ article.title }}
-            </NuxtLink>
-            <p
-              v-if="article.description"
-              class="mt-1 text-sm text-muted line-clamp-2"
-            >
-              {{ article.description }}
-            </p>
-            <p class="mt-2 text-xs text-dimmed font-mono">
-              {{ article.path }}
-            </p>
-          </li>
-        </ul>
+            :key="article.stem ?? article.path"
+            spotlight
+            class="w-full"
+            :to="articleTo(article)"
+            :title="article.title ?? '未命名'"
+            :description="article.description"
+          />
+        </div>
 
         <div
           v-if="totalCount > ITEMS_PER_PAGE"
@@ -121,7 +130,6 @@ useSeo({
     </UPageBody>
 
     <template #right>
-      <!-- 占位目录区：与正文页右侧 TOC 同宽，使 UPageBody 宽度一致 -->
       <UPageAside aria-hidden="true" />
     </template>
   </UPage>

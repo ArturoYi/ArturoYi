@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 归档页专用：顶栏第二行展示「全部」+ 各分类（UNavigationMenu）
 const { sections } = useSubNavigation();
 
 const navMenuVariants = useUIConfig("navigationMenu");
@@ -9,6 +10,7 @@ const navMenuVariants = useUIConfig("navigationMenu");
 
   <UContainer class="hidden lg:flex items-center justify-between">
     <UNavigationMenu
+      v-if="sections.length"
       :items="sections"
       :highlight="navMenuVariants.highlight ?? true"
       :highlight-color="navMenuVariants.highlightColor"

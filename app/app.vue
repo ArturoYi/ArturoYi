@@ -63,7 +63,7 @@ const { data: navigation } = await useAsyncData(
 
 provide("navigation", navigation);
 
-// 与 AppHeader 共用 app/composables/useSubNavigation.ts，避免 docus 内置版在 docs 页误加 112px 顶栏高度
+// archive 页 subNavigationMode=header 时启用 .docus-sub-header（AppHeaderBottom）
 const { subNavigationMode } = useSubNavigation(navigation);
 </script>
 

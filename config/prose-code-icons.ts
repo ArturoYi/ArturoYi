@@ -1,6 +1,17 @@
-// @nuxt/ui 代码块文件名图标由 prose.codeIcon 动态映射，scan 无法发现，需显式预打包。
-// 列表与 .nuxt/ui/prose/code-icon.ts 中的映射一致，覆盖所有支持的文件类型标签。
+/**
+ * @nuxt/icon clientBundle 显式预打包列表（配合 nuxt.config icon.clientBundle.icons）。
+ * scan 无法发现的来源须写在这里：
+ * - @nuxt/ui prose 代码块文件名 → codeIcon 映射
+ * - content/.navigation.yml 栏目 icon（运行时字符串）
+ * 格式：collection:name（与 Iconify 一致）。
+ */
 export const proseCodeIcons = [
+  // app.config navigation.allIcon（scan 扫不到 app.config 字符串）
+  "lucide:library",
+  // content/.navigation.yml（playground 等栏目）
+  "lucide:flask-conical",
+  "lucide:layout-list",
+  "lucide:layers",
   "lucide:terminal",
   "simple-icons:x",
   "simple-icons:discord",
@@ -11,6 +22,8 @@ export const proseCodeIcons = [
   "vscode-icons:file-type-bicep",
   "vscode-icons:file-type-bun",
   "vscode-icons:file-type-cppheader",
+  // css 代码块语言标签由 @nuxt/ui prose 动态映射，scan 无法发现
+  "vscode-icons:file-type-css",
   "vscode-icons:file-type-csharp",
   "vscode-icons:file-type-dartlang",
   "vscode-icons:file-type-deno",

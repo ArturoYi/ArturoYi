@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// archive 布局与 app.vue 一致：顶栏含 AppHeaderBottom 时需增高 header 高度
 const { subNavigationMode } = useSubNavigation();
 
 useHead({
