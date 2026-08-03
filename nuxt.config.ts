@@ -1,4 +1,10 @@
+import type { Nuxt, NuxtConfig, ViteConfig } from "@nuxt/schema";
+import { defineNuxtConfig as defineNuxtConfigFromNuxt } from "nuxt/config";
 import { proseCodeIcons } from "./config/prose-code-icons";
+
+/** pnpm workspace 单包误配时 IDE 会把 DefineNuxtConfig 当成不可调用的 interface，此处收窄为函数 */
+const defineNuxtConfig =
+  defineNuxtConfigFromNuxt as (config: NuxtConfig) => NuxtConfig;
 
 export default defineNuxtConfig({
   // content-categories 模块会在 setup 中覆盖 contentCategoryStems
@@ -38,7 +44,7 @@ export default defineNuxtConfig({
     // 扫描 content 一级目录的 .navigation.yml，写入 runtimeConfig
     "./modules/content-categories",
     // 草稿过滤：frontmatter 中 draft: true 的文档不进入导航
-    function draftFilterModule(_options, nuxt) {
+    function draftFilterModule(_options: Record<string, unknown>, nuxt: Nuxt) {
       // Content 注册此 hook 于 NuxtHooks；Nuxt.hooks 类型为 NuxtHooks$1
       nuxt.hooks.hook(
         "content:file:afterParse" as never,
@@ -120,7 +126,7 @@ export default defineNuxtConfig({
   // Nuxt 生命周期钩子
   hooks: {
     // pnpm 无法解析 @nuxtjs/mdc 模块添加的嵌套 optimizeDeps 路径，改为扁平包名
-    "vite:extendConfig"(config) {
+    "vite:extendConfig"(config: ViteConfig) {
       if (config.optimizeDeps?.include) {
         config.optimizeDeps.include = config.optimizeDeps.include.map(
           (id: string) =>

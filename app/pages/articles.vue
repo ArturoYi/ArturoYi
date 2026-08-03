@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Collections } from "@nuxt/content";
 import { articleMatchesCategoryStem } from "../utils/category-tabs";
 
 const ITEMS_PER_PAGE = 10;
@@ -7,22 +6,6 @@ const ITEMS_PER_PAGE = 10;
 definePageMeta({
   layout: "archive",
 });
-
-type ArticlePreview = Pick<
-  Collections["docs"],
-  "title" | "path" | "description" | "stem"
-> & {
-  meta?: Record<string, unknown>;
-};
-
-function isArticlePage(page: ArticlePreview): boolean {
-  if (!page.path || page.path.includes(".navigation")) {
-    return false;
-  }
-
-  const lastStemSegment = (page.stem ?? "").split("/").pop() ?? "";
-  return lastStemSegment !== "index";
-}
 
 const route = useRoute();
 const { activeCategoryStem } = useSubNavigation();
@@ -44,6 +27,17 @@ const { data: pages } = await useAsyncData("articles-all", () =>
     .select("title", "path", "description", "stem", "meta")
     .all(),
 );
+
+type ArticlePreview = NonNullable<typeof pages.value>[number];
+
+function isArticlePage(page: ArticlePreview): boolean {
+  if (!page.path || page.path.includes(".navigation")) {
+    return false;
+  }
+
+  const lastStemSegment = (page.stem ?? "").split("/").pop() ?? "";
+  return lastStemSegment !== "index";
+}
 
 const articles = computed(() =>
   (pages.value ?? [])
