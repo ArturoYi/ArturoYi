@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4158D0,100:C850C0&height=120&section=header&text=Hello%20GitHub&fontSize=38&fontColor=ffffff&animation=fadeIn" alt="header" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4158D0,100:C850C0&height=148&section=header&text=ArturoYi&fontSize=52&fontColor=ffffff&animation=scaleIn&stroke=ffffff&strokeWidth=0.35&fontAlignY=42&width=900" alt="ArturoYi" />
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=22&duration=3500&pause=1000&color=4158D0&center=true&vCenter=true&width=500&lines=Welcome+to+my+profile+%F0%9F%91%8B;Code+%C2%B7+Create+%C2%B7+Share" alt="typing intro" />
 
@@ -96,11 +96,7 @@
 
 <br />
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://ghchart.rshah.org/ArturoYi.svg?color=4158D0" />
-  <source media="(prefers-color-scheme: light)" srcset="https://ghchart.rshah.org/ArturoYi.svg?color=239a3b" />
-  <img src="https://ghchart.rshah.org/ArturoYi.svg?color=239a3b" alt="GitHub contribution chart" />
-</picture>
+<img src="https://ghchart.rshah.org/ArturoYi.svg?color=4158D0" alt="GitHub contribution chart" />
 
 </div>
 
