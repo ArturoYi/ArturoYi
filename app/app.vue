@@ -84,6 +84,7 @@ const { subNavigationMode } = useSubNavigation(navigation);
 
         <ClientOnly>
           <AppSearch :navigation="navigation" />
+          <AppBackToTop />
           <LazyAssistantFloatingInput v-if="isAssistantEnabled" />
         </ClientOnly>
       </div>

@@ -56,8 +56,8 @@ export default defineAppConfig({
   },
 
   // 页脚/侧栏社交链接，键名对应图标（i-simple-icons-${key}）
+  // GitHub 链接由下方 github 配置统一提供，勿重复写入 socials
   socials: {
-    github: "https://github.com/ArturoYi",
     // x: "https://x.com/nuxt_js",
     // discord: "https://discord.com/invite/ps2h6QT",
     // nuxt: "https://nuxt.com",
@@ -85,13 +85,14 @@ export default defineAppConfig({
     },
   },
 
-  // GitHub 仓库集成，用于「编辑此页」等链接
+  // GitHub 仓库集成，用于页眉/页脚图标与「编辑此页」等链接
   github: {
     // 仓库地址
-    url: "https://github.com/nuxt-content/docus",
+    url: "https://github.com/ArturoYi/ArturoYi",
     // 默认分支名
     branch: "main",
     // 内容文件在仓库中的根目录
-    rootDir: "docs",
+    rootDir: "content",
   },
+  ui: undefined
 });
