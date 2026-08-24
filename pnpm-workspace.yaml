@@ -3,6 +3,7 @@ packages:
   - "."
 
 # Docus 钉死 ~6.6.0；该版本 DevTools RPC 会超时。6.7.7+ 已改为 asEvent()。
+# Cloudflare / CI 默认 pnpm 10.11.1，需在 package.json 的 pnpm.overrides 同步一份。
 overrides:
   nuxt-og-image: 6.7.8
 
