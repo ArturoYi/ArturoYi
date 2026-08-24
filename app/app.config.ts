@@ -41,11 +41,12 @@ export default defineAppConfig({
     title: "ArturoYi",
     logo: {
       // 浅色模式下的 Logo 图片 URL，留空则仅显示文字标题
-      light: "",
+      light: "/images/arturoyi-avatar.jpg",
       // 深色模式下的 Logo 图片 URL
-      dark: "",
+      dark: "/images/arturoyi-avatar.jpg",
       // Logo 图片的 alt 文本，用于无障碍访问
       alt: "ArturoYi",
+      class: "rounded-full object-cover",
     },
   },
 

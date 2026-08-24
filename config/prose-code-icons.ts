@@ -8,6 +8,8 @@
 export const proseCodeIcons = [
   // app.config navigation.allIcon（scan 扫不到 app.config 字符串）
   "lucide:library",
+  // content/.navigation.yml 栏目 icon（运行时字符串）
+  "lucide:git-commit",
   // content/.navigation.yml（playground 等栏目）
   "lucide:flask-conical",
   "lucide:layout-list",

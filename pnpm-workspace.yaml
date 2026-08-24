@@ -2,6 +2,10 @@
 packages:
   - "."
 
+# Docus 钉死 ~6.6.0；该版本 DevTools RPC 会超时。6.7.7+ 已改为 asEvent()。
+overrides:
+  nuxt-og-image: 6.7.8
+
 allowBuilds:
   better-sqlite3: true
   esbuild: true

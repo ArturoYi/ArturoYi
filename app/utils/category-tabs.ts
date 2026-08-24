@@ -24,6 +24,18 @@ export function articleMatchesCategoryStem(
   return stem === categoryStem || stem.startsWith(`${categoryStem}/`);
 }
 
+/** 首页成长时间线使用的「年度总结」栏目（标题或一级目录名） */
+const ANNUAL_REVIEW_RE = /年度总结|annual[-_]?review/i;
+
+export function isAnnualReviewCategory(options: {
+  title?: string;
+  stem?: string;
+}): boolean {
+  if (options.title && ANNUAL_REVIEW_RE.test(options.title)) return true;
+  const root = options.stem?.split("/")[0] ?? "";
+  return ANNUAL_REVIEW_RE.test(root);
+}
+
 /**
  * 构建归档页 AppHeaderBottom 的 Tab 列表：
  * 首位为「全部」（所有 md），其后为各 content 分类。

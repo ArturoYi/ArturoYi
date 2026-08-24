@@ -30,11 +30,12 @@ const scrollToTimeline = () => {
 
 <template>
   <div class="relative min-h-screen overflow-x-hidden selection:bg-neutral-900 selection:text-white dark:selection:bg-neutral-100 dark:selection:text-neutral-900">
-    <!-- 全局低调微视差点阵与柔和环境光 -->
+    <!-- 全局视差点阵与鼠标跟随光晕 -->
     <HomeParallaxBackground />
 
-    <!-- 顶部 Hero 区域 -->
-    <section class="relative pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-28">
+    <div class="relative z-10">
+      <!-- 顶部 Hero 区域 -->
+      <section class="relative pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-24 lg:pb-28">
       <div class="max-w-5xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           <!-- 左侧：沉稳专注的个人介绍 -->
@@ -42,23 +43,17 @@ const scrollToTimeline = () => {
             <!-- 状态标签 -->
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700/80 text-xs font-mono text-neutral-600 dark:text-neutral-300">
               <span class="h-2 w-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-              <span>Full Stack Developer · Builder</span>
+              <span>ArturoYi</span>
             </div>
 
-            <!-- 主标题：干净、有力、低调极客 -->
+            <!-- 主标题：写给自己看 -->
             <h1 class="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-tight">
-              用年轻与专注，
-              <br class="hidden sm:inline" />
-              构建清晰可靠的数字体验。
+              对自己说话。
             </h1>
 
             <!-- 简介 -->
-            <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-lg leading-relaxed">
-              你好，我是 <span class="font-semibold text-neutral-900 dark:text-neutral-100">ArturoYi</span>。
-              专注于现代 Web 前端与全栈工程，热衷于在 
-              <span class="font-mono text-neutral-800 dark:text-neutral-200">Nuxt 4</span>、
-              <span class="font-mono text-neutral-800 dark:text-neutral-200">TypeScript</span> 与 
-              <span class="font-mono text-neutral-800 dark:text-neutral-200">AI Native</span> 体系中探索更优雅的架构与用户体验。
+            <p class="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
+              写代码，记一点笔记。尽量少说。
             </p>
 
             <!-- 按钮组 -->
@@ -99,7 +94,7 @@ const scrollToTimeline = () => {
             </div>
           </div>
 
-          <!-- 右侧：现代极简代码窗口 -->
+          <!-- 右侧：Q 版头像 -->
           <div class="lg:col-span-5">
             <HomeHeroTerminal />
           </div>
@@ -107,13 +102,13 @@ const scrollToTimeline = () => {
       </div>
     </section>
 
-    <!-- 关键数据指标与技术栈 -->
+    <!-- 技术栈图标 -->
     <HomeTechMatrix />
 
     <!-- 以年为单位的成长历程时间线 -->
     <HomeGrowthTimeline />
 
-    <!-- 理念与核心原则 -->
+    <!-- 写给自己 -->
     <HomeGeekManifesto />
 
     <!-- 底部极简探索 CTA -->
@@ -147,5 +142,6 @@ const scrollToTimeline = () => {
         </div>
       </div>
     </section>
+    </div>
   </div>
 </template>
