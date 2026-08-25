@@ -1,11 +1,9 @@
 <script setup lang="ts">
 const tools = [
-  { name: "Vue", icon: "i-vscode-icons-file-type-vue" },
-  { name: "TypeScript", icon: "i-vscode-icons-file-type-typescript-official" },
-  { name: "Tailwind CSS", icon: "i-vscode-icons-file-type-tailwind" },
-  { name: "Node.js", icon: "i-vscode-icons-file-type-node" },
-  { name: "Vite", icon: "i-vscode-icons-file-type-vite" },
-  { name: "AI Agents", icon: "i-lucide-bot" },
+  { name: "Android", icon: "i-logos-android-icon" },
+  { name: "iOS", icon: "i-logos-apple", class: "dark:invert" },
+  { name: "Flutter", icon: "i-logos-flutter" },
+  { name: "Vue", icon: "i-logos-vue" },
 ];
 </script>
 
@@ -18,7 +16,8 @@ const tools = [
           :key="item.name"
           :name="item.icon"
           :aria-label="item.name"
-          class="h-8 w-8 sm:h-9 sm:w-9 text-neutral-500 dark:text-neutral-400"
+          class="h-8 w-8 sm:h-9 sm:w-9"
+          :class="item.class"
         />
       </div>
     </div>

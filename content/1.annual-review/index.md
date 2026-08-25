@@ -1,6 +1,6 @@
 ---
 title: 年度总结
-description: 以年为尺，记录每一步技术轨迹。
+description: 每年总结一下，为了放心去忘记。
 navigation:
   icon: i-lucide-git-commit
 ---

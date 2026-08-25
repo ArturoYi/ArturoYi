@@ -74,11 +74,11 @@ export default defineAppConfig({
       links: [
         {
           // 链接图标，使用 Iconify 类名
-          icon: "i-lucide-book-open",
+          icon: "i-simple-icons-github",
           // 链接显示文字
-          label: "Nuxt UI docs",
+          label: "GitHub",
           // 跳转地址
-          to: "https://ui.nuxt.com/getting-started/installation/nuxt",
+          to: "https://github.com/ArturoYi/ArturoYi",
           // 在新标签页打开
           target: "_blank",
         },

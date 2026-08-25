@@ -161,10 +161,10 @@ const getWatermarkStyle = (index: number) => {
         <span>GROWTH LOG · 成长历程</span>
       </div>
       <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
-        以年为尺，记录每一步技术轨迹
+        年度总结
       </h2>
       <p class="mt-3 text-sm sm:text-base text-neutral-500 dark:text-neutral-400 max-w-xl mx-auto">
-        从年度总结中按时间排列。点击卡片即可阅读对应文章。
+        每年记录一下，为了放心去忘记
       </p>
     </div>
 

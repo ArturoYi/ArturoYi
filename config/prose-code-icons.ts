@@ -10,6 +10,16 @@ export const proseCodeIcons = [
   "lucide:library",
   // content/.navigation.yml 栏目 icon（运行时字符串）
   "lucide:git-commit",
+  "lucide:feather",
+  "simple-icons:android",
+  "simple-icons:apple",
+  "simple-icons:flutter",
+  "simple-icons:vuedotjs",
+  // HomeTechMatrix 彩色品牌标（数组字符串，scan 扫不到）
+  "logos:android-icon",
+  "logos:apple",
+  "logos:flutter",
+  "logos:vue",
   // content/.navigation.yml（playground 等栏目）
   "lucide:flask-conical",
   "lucide:layout-list",

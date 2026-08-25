@@ -26,6 +26,9 @@ const scrollToTimeline = () => {
     el.scrollIntoView({ behavior: "smooth" });
   }
 };
+
+const heroHeadline = "对自己说点什么。";
+const { displayedText } = useTyping(heroHeadline, 100);
 </script>
 
 <template>
@@ -47,8 +50,14 @@ const scrollToTimeline = () => {
             </div>
 
             <!-- 主标题：写给自己看 -->
-            <h1 class="text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-tight">
-              对自己说话。
+            <h1
+              class="relative text-3xl sm:text-5xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-tight"
+              :aria-label="heroHeadline"
+            >
+              <span class="invisible select-none" aria-hidden="true">{{ heroHeadline }}</span>
+              <span class="absolute inset-0" aria-hidden="true">
+                {{ displayedText }}<span class="typing-caret" />
+              </span>
             </h1>
 
             <!-- 简介 -->
@@ -145,3 +154,28 @@ const scrollToTimeline = () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.typing-caret {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.85em;
+  margin-left: 0.12em;
+  vertical-align: -0.06em;
+  background: currentColor;
+  animation: typing-caret-blink 1s step-end infinite;
+}
+
+@keyframes typing-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-caret {
+    animation: none;
+    opacity: 0;
+  }
+}
+</style>
