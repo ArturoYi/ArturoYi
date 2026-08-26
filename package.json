@@ -13,6 +13,7 @@
     }
   },
   "dependencies": {
+    "@iconify-json/logos": "^1.2.13",
     "@iconify-json/lucide": "^1.2.120",
     "@iconify-json/simple-icons": "^1.2.92",
     "@iconify-json/vscode-icons": "^1.2.67",
