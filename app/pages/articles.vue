@@ -126,7 +126,8 @@ function articleCategoryLabel(page: ArticlePreview): string {
   const match = categories.value.find(
     (item) => getCategoryStemFromItem(item) === root,
   );
-  return match?.title ?? root.replace(/^\d+\./, "");
+  // 无 .navigation.yml 的目录（如 content/blog）不单独成 Tab，在「全部」里标为杂乱
+  return match?.title ?? "杂乱";
 }
 
 const articles = computed(() =>

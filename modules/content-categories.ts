@@ -17,7 +17,8 @@ export default defineNuxtModule({
       // 只处理 content 下的一级子目录
       stems = readdirSync(contentDir, { withFileTypes: true })
         .filter((entry) => entry.isDirectory())
-        // 约定：存在 .navigation.yml 的目录 = 顶栏分类（指南 / 写作等）
+        // 约定：存在 .navigation.yml 的目录 = 顶栏分类
+        // 无该文件的目录（如 content/blog）只出现在「全部」，不单独成 Tab
         .filter((entry) =>
           existsSync(join(contentDir, entry.name, ".navigation.yml")),
         )
