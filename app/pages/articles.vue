@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {
-  articleMatchesCategoryStem,
+  articleBelongsToCategory,
+  articleCategoryLabels,
   getCategoryStemFromItem,
+  listArticleCategoryTokens,
 } from "../utils/category-tabs";
 
 const ITEMS_PER_PAGE = 10;
@@ -69,6 +71,10 @@ function pickTags(page: ArticlePreview): string[] {
     : [];
 }
 
+function pickCategories(page: ArticlePreview): string[] {
+  return listArticleCategoryTokens(pickField(page, "categories"));
+}
+
 function pickDateValue(page: ArticlePreview): string | Date | undefined {
   const value = pickField(page, "date");
   if (value instanceof Date || typeof value === "string") return value;
@@ -121,13 +127,11 @@ function formatArticleDate(page: ArticlePreview): {
 
 function articleCategoryLabel(page: ArticlePreview): string {
   if (activeCategoryStem.value) return "";
-  const root = page.stem?.split("/")[0];
-  if (!root) return "";
-  const match = categories.value.find(
-    (item) => getCategoryStemFromItem(item) === root,
-  );
-  // 无 .navigation.yml 的目录（如 content/blog）不单独成 Tab，在「全部」里标为杂乱
-  return match?.title ?? "杂乱";
+  return articleCategoryLabels({
+    stem: page.stem,
+    categoryTokens: pickCategories(page),
+    categories: categories.value,
+  }).join(" · ");
 }
 
 const articles = computed(() =>
@@ -140,11 +144,21 @@ const articles = computed(() =>
     }),
 );
 
-/** 「全部」Tab：所有 md；?cat= 只筛某一栏目 */
+/** 「全部」Tab：所有 md；?cat= 按目录或 frontmatter.categories 交叉归属筛选 */
 const filteredArticles = computed(() => {
   const stem = activeCategoryStem.value;
   if (!stem) return articles.value;
-  return articles.value.filter((a) => articleMatchesCategoryStem(a.stem, stem));
+  const current = categories.value.find(
+    (item) => getCategoryStemFromItem(item) === stem,
+  );
+  return articles.value.filter((article) =>
+    articleBelongsToCategory({
+      stem: article.stem,
+      categoryTokens: pickCategories(article),
+      categoryStem: stem,
+      categoryTitle: current?.title,
+    }),
+  );
 });
 
 const totalCount = computed(() => filteredArticles.value.length);

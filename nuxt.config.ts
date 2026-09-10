@@ -61,6 +61,8 @@ export default defineNuxtConfig({
   routeRules: {
     // 默认所有路由静态预渲染
     "/**": { prerender: true },
+    // 面试栏目没有落地页，根路径落到第一篇真题
+    "/interview": { redirect: "/interview/flutter-interview1" },
   },
 
   // @nuxt/content 内容模块配置
@@ -98,6 +100,7 @@ export default defineNuxtConfig({
             "go",
             "java",
             "kotlin",
+            "dart",
             "toml",
             "xml",
             "sql",

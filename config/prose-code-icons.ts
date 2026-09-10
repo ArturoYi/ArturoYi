@@ -10,6 +10,10 @@ export const proseCodeIcons = [
   "lucide:library",
   "lucide:route",
   "lucide:shield-check",
+  "lucide:book-open",
+  "lucide:boxes",
+  "lucide:cpu",
+  "lucide:graduation-cap",
   // content/.navigation.yml 栏目 icon（运行时字符串）
   "lucide:git-commit",
   "lucide:feather",

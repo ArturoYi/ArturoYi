@@ -5,6 +5,7 @@ import { defineNuxtModule } from "@nuxt/kit";
 /**
  * Nuxt 模块：在构建/开发启动时扫描 content/ 一级目录，
  * 将有 `.navigation.yml` 的文件夹视为「文档分类」，供顶栏 Tab 与侧栏截断使用。
+ * 文章还可用 frontmatter.categories 交叉归属到多个栏目（见 articleBelongsToCategory）。
  */
 export default defineNuxtModule({
   meta: { name: "content-categories" },

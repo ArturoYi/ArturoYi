@@ -24,6 +24,103 @@ export function articleMatchesCategoryStem(
   return stem === categoryStem || stem.startsWith(`${categoryStem}/`);
 }
 
+/** 去掉栏目目录的排序前缀：`5.flutter` → `flutter` */
+export function stripCategoryOrderPrefix(stem: string): string {
+  return stem.replace(/^\d+\./, "");
+}
+
+/** 栏目 / frontmatter 类型写成可比较的小写 token */
+export function normalizeCategoryToken(value: string): string {
+  return stripCategoryOrderPrefix(value.trim()).toLowerCase();
+}
+
+/** 读取 frontmatter `categories`（可写 slug、目录名或栏目标题） */
+export function listArticleCategoryTokens(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is string => typeof item === "string" && item.trim() !== "",
+  );
+}
+
+/**
+ * 文章是否属于某栏目：落在该目录下，或 frontmatter.categories 点名了该栏目。
+ * token 可为 `flutter`、`5.flutter`、`Flutter`。
+ */
+export function articleBelongsToCategory(options: {
+  stem?: string;
+  categoryTokens?: readonly string[];
+  categoryStem: string;
+  categoryTitle?: string;
+}): boolean {
+  if (articleMatchesCategoryStem(options.stem, options.categoryStem)) {
+    return true;
+  }
+
+  const accepted = new Set<string>([
+    normalizeCategoryToken(options.categoryStem),
+  ]);
+  if (options.categoryTitle?.trim()) {
+    accepted.add(options.categoryTitle.trim().toLowerCase());
+  }
+
+  return (options.categoryTokens ?? []).some((token) => {
+    const trimmed = token.trim();
+    return (
+      accepted.has(normalizeCategoryToken(trimmed)) ||
+      accepted.has(trimmed.toLowerCase())
+    );
+  });
+}
+
+/** 「全部」列表上展示的栏目名：目录归属 + frontmatter 交叉归属，去重 */
+export function articleCategoryLabels(options: {
+  stem?: string;
+  categoryTokens?: readonly string[];
+  categories: ReadonlyArray<Pick<ContentNavigationItem, "title" | "stem">>;
+}): string[] {
+  const labels: string[] = [];
+  const seen = new Set<string>();
+
+  const add = (title: string | undefined) => {
+    const value = title?.trim();
+    if (!value || seen.has(value)) return;
+    seen.add(value);
+    labels.push(value);
+  };
+
+  const resolveToken = (token: string): string | undefined => {
+    const normalized = normalizeCategoryToken(token);
+    const lower = token.trim().toLowerCase();
+    const match = options.categories.find((item) => {
+      const stem = getCategoryStemFromItem(item as ContentNavigationItem);
+      if (!stem) return false;
+      return (
+        normalizeCategoryToken(stem) === normalized ||
+        item.title?.trim().toLowerCase() === lower
+      );
+    });
+    return match?.title;
+  };
+
+  const root = options.stem?.split("/")[0];
+  if (root) {
+    const home = options.categories.find(
+      (item) => getCategoryStemFromItem(item as ContentNavigationItem) === root,
+    );
+    add(home?.title);
+  }
+
+  for (const token of options.categoryTokens ?? []) {
+    add(resolveToken(token));
+  }
+
+  if (!labels.length && root) {
+    add("杂乱");
+  }
+
+  return labels;
+}
+
 /** 首页成长时间线使用的「年度总结」栏目（标题或一级目录名） */
 const ANNUAL_REVIEW_RE = /年度总结|annual[-_]?review/i;
 
