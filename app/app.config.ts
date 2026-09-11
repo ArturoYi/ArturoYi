@@ -95,5 +95,19 @@ export default defineAppConfig({
     // 内容文件在仓库中的根目录
     rootDir: "content",
   },
-  ui: undefined
+  ui: {
+    prose: {
+      img: {
+        slots: {
+          base: "rounded-md mx-auto block h-auto",
+        },
+        variants: {
+          // 未写 width 时不再铺满栏宽，截图默认限制在 32rem
+          width: {
+            false: "max-w-lg w-full",
+          },
+        },
+      },
+    },
+  },
 });

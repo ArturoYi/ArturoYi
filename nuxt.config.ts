@@ -101,6 +101,8 @@ export default defineNuxtConfig({
             "java",
             "kotlin",
             "dart",
+            "swift",
+            "ruby",
             "toml",
             "xml",
             "sql",
