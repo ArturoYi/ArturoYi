@@ -31,6 +31,11 @@ const contentTocVariants = useUIConfig("contentToc");
       :title="appConfig.toc?.title || t('docs.toc')"
       :links="links"
       :class="{ 'hidden lg:block': subNavigationMode }"
+      :ui="{
+        itemWithChildren: 'min-w-0',
+        link: 'min-w-0',
+        linkText: 'truncate',
+      }"
     >
       <template #bottom>
         <DocsAsideRightBottom />

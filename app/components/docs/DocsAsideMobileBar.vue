@@ -87,6 +87,9 @@ const tocDrawerOpen = ref(false);
             container: '!pt-0 border-b-0',
             trailingIcon: 'hidden',
             bottom: 'flex flex-col',
+            itemWithChildren: 'min-w-0',
+            link: 'min-w-0',
+            linkText: 'truncate',
           }"
         >
           <template #bottom>
