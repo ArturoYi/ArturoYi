@@ -1,10 +1,4 @@
-import type { Nuxt, NuxtConfig, ViteConfig } from "@nuxt/schema";
-import { defineNuxtConfig as defineNuxtConfigFromNuxt } from "nuxt/config";
 import { proseCodeIcons } from "./config/prose-code-icons";
-
-/** pnpm workspace 单包误配时 IDE 会把 DefineNuxtConfig 当成不可调用的 interface，此处收窄为函数 */
-const defineNuxtConfig =
-  defineNuxtConfigFromNuxt as (config: NuxtConfig) => NuxtConfig;
 
 export default defineNuxtConfig({
   // content-categories 模块会在 setup 中覆盖 contentCategoryStems
@@ -15,6 +9,8 @@ export default defineNuxtConfig({
   },
   // 继承 Docus 文档主题，获得文档站点预设布局与组件
   extends: ["docus"],
+
+  _nuxtConfigFile: "nuxt.config.ts",
 
   // 站点元信息，供 SEO、sitemap、OG 标签等模块使用
   site: {
