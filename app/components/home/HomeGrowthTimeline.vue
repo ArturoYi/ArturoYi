@@ -12,10 +12,9 @@ interface TimelineItem {
   title: string;
   subtitle: string;
   summary: string;
+  quote: string;
   points: string[];
   tags: string[];
-  image: string;
-  imageAlt: string;
   path: string;
 }
 
@@ -112,20 +111,51 @@ const timelineData = computed<TimelineItem[]>(() => {
     .map((page) => {
       const year = extractYear(page);
       const title = page.title ?? "未命名";
+      const summary = pickString(page, "summary") || page.description || "";
+      const quote =
+        pickString(page, "quote") || summary || page.description || title;
       return {
         year,
         stage: pickString(page, "stage") || (year ? `${year}` : "年度总结"),
         title,
         subtitle: pickString(page, "subtitle") || page.description || "",
-        summary: pickString(page, "summary") || page.description || "",
+        summary,
+        quote,
         points: pickStringList(page, "points"),
         tags: pickStringList(page, "tags"),
-        image: pickString(page, "image") || pickString(page, "cover"),
-        imageAlt: pickString(page, "imageAlt") || title,
         path: page.path,
       };
     });
 });
+
+const copiedPath = ref<string | null>(null);
+let copyTimer: ReturnType<typeof setTimeout> | null = null;
+
+async function copyQuote(text: string, path: string) {
+  if (!text) return;
+  try {
+    if (typeof navigator !== "undefined" && navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else if (typeof document !== "undefined") {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+    copiedPath.value = path;
+    if (copyTimer) clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => {
+      copiedPath.value = null;
+    }, 2000);
+  } catch (err) {
+    console.error("复制失败", err);
+  }
+}
 
 const scrollY = ref(0);
 const isMounted = ref(false);
@@ -142,6 +172,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
+  if (copyTimer) clearTimeout(copyTimer);
 });
 
 const getWatermarkStyle = (index: number) => {
@@ -155,6 +186,7 @@ const getWatermarkStyle = (index: number) => {
 
 <template>
   <section id="growth-timeline" class="relative py-20 sm:py-28">
+    <!-- 头部区域 -->
     <div class="max-w-4xl mx-auto px-4 text-center mb-16 sm:mb-20">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 text-xs font-mono font-medium tracking-wide uppercase mb-3 border border-neutral-200/60 dark:border-neutral-700/60">
         <UIcon name="i-lucide-git-commit" class="h-3.5 w-3.5 text-primary" />
@@ -168,114 +200,181 @@ const getWatermarkStyle = (index: number) => {
       </p>
     </div>
 
+    <!-- 空数据提示 -->
     <div v-if="!timelineData.length" class="max-w-xl mx-auto px-4 text-center text-sm text-neutral-500 dark:text-neutral-400">
       暂无年度总结文章。
     </div>
 
+    <!-- 时间轴主体 -->
     <div v-else class="relative max-w-5xl mx-auto px-4 sm:px-6">
+      <!-- 贯穿居中时间轴线 -->
       <div
         aria-hidden="true"
-        class="absolute left-6 md:left-1/2 top-4 bottom-8 -translate-x-1/2 w-px bg-neutral-200 dark:bg-neutral-800"
+        class="absolute left-6 md:left-1/2 top-4 bottom-8 -translate-x-1/2 w-px bg-gradient-to-b from-neutral-200 via-neutral-300 dark:from-neutral-800 dark:via-neutral-700 to-transparent"
       />
 
-      <div class="space-y-12 sm:space-y-20">
+      <div class="space-y-16 sm:space-y-24">
         <div
           v-for="(item, index) in timelineData"
           :key="item.path"
-          class="relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12"
-          :class="index % 2 === 0 ? 'md:flex-row-reverse' : ''"
+          class="relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-14"
+          :class="index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'"
         >
+          <!-- 背景流动年份水印 -->
           <div
             class="pointer-events-none absolute select-none text-7xl sm:text-9xl font-black font-mono tracking-tighter opacity-[0.03] dark:opacity-[0.04] -z-10 leading-none transition-transform duration-100 ease-out"
-            :class="index % 2 === 0 ? 'right-2 md:right-8' : 'left-2 md:left-8'"
+            :class="index % 2 === 0 ? 'left-2 md:left-8' : 'right-2 md:right-8'"
             :style="getWatermarkStyle(index)"
           >
             {{ item.year }}
           </div>
 
+          <!-- 时间轴节点圆点（微光双环） -->
           <div
-            class="absolute left-6 md:left-1/2 -translate-x-1/2 top-7 md:top-1/2 md:-translate-y-1/2 z-10 flex items-center justify-center"
+            class="absolute left-6 md:left-1/2 -translate-x-1/2 top-6 md:top-1/2 md:-translate-y-1/2 z-10 flex items-center justify-center"
           >
-            <div class="h-4 w-4 rounded-full bg-white dark:bg-neutral-950 border-2 border-primary shadow-xs" />
+            <div class="relative flex items-center justify-center">
+              <div class="h-4 w-4 rounded-full bg-white dark:bg-neutral-950 border-2 border-primary shadow-xs ring-4 ring-neutral-100/80 dark:ring-neutral-900/80" />
+            </div>
           </div>
 
-          <div class="w-full md:w-1/2 pl-12 md:pl-0" :class="{ 'md:w-full': !item.image }">
-            <NuxtLink
-              :to="item.path"
-              class="group relative block rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md p-5 sm:p-6 shadow-sm hover:shadow-md hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-300"
-            >
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-xl sm:text-2xl font-bold font-mono text-neutral-900 dark:text-white">
-                    {{ item.year }}
-                  </span>
-                  <span class="px-2 py-0.5 text-xs font-mono font-medium rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60">
-                    {{ item.stage }}
-                  </span>
-                </div>
-                <span class="text-[11px] font-mono text-neutral-400 dark:text-neutral-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                  阅读全文 →
+          <!-- 侧 A：开放式轻量足迹区（无多余背景框，聚焦年份与技术要点，与对侧文案 0 重复） -->
+          <div
+            class="w-full md:w-1/2 pl-12 md:pl-0"
+            :class="index % 2 === 0 ? 'md:text-right md:pr-10' : 'md:text-left md:pl-10'"
+          >
+            <div class="space-y-3">
+              <!-- 年份大字与阶段徽标 -->
+              <div
+                class="flex items-center gap-3"
+                :class="index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'"
+              >
+                <span class="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-neutral-900 dark:text-white">
+                  {{ item.year }}
+                </span>
+                <span class="px-2.5 py-0.5 text-xs font-mono font-medium rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60">
+                  {{ item.stage }}
                 </span>
               </div>
 
-              <h3 class="text-base sm:text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                {{ item.title }}
-              </h3>
-              <p v-if="item.subtitle" class="text-xs font-medium text-neutral-500 dark:text-neutral-400 mt-0.5 mb-3">
-                {{ item.subtitle }}
-              </p>
+              <!-- 文章标题链接（简洁可点） -->
+              <NuxtLink
+                :to="item.path"
+                class="group/link inline-flex items-center gap-1.5 text-base sm:text-lg font-bold text-neutral-800 dark:text-neutral-100 hover:text-primary dark:hover:text-primary transition-colors"
+              >
+                <span>{{ item.title }}</span>
+                <UIcon
+                  name="i-lucide-arrow-up-right"
+                  class="h-4 w-4 text-neutral-400 group-hover/link:text-primary group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                />
+              </NuxtLink>
 
-              <p v-if="item.summary" class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4">
-                {{ item.summary }}
-              </p>
-
+              <!-- 这一年的关键技术/行动足迹（极客终端命令行点阵） -->
               <div
                 v-if="item.points.length"
-                class="space-y-1.5 mb-4 pt-2 border-t border-neutral-100 dark:border-neutral-800/80"
+                class="space-y-1.5 pt-1"
+                :class="index % 2 === 0 ? 'md:flex md:flex-col md:items-end' : ''"
               >
                 <div
                   v-for="(point, pIdx) in item.points"
                   :key="pIdx"
-                  class="flex items-start gap-2 text-xs text-neutral-600 dark:text-neutral-300"
+                  class="flex items-start gap-2 text-xs font-mono text-neutral-500 dark:text-neutral-400 leading-relaxed"
+                  :class="index % 2 === 0 ? 'md:flex-row-reverse text-left md:text-right' : 'text-left'"
                 >
-                  <span class="text-primary font-bold">·</span>
+                  <span class="text-primary font-bold select-none shrink-0">&gt;</span>
                   <span>{{ point }}</span>
                 </div>
               </div>
 
+              <!-- 标签胶囊群 -->
               <div
                 v-if="item.tags.length"
-                class="flex flex-wrap gap-1.5 pt-2 border-t border-neutral-100 dark:border-neutral-800/80"
+                class="flex flex-wrap gap-1.5 pt-1"
+                :class="index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'"
               >
                 <span
                   v-for="tag in item.tags"
                   :key="tag"
-                  class="px-2 py-0.5 text-[11px] font-mono rounded bg-neutral-100/80 dark:bg-neutral-800/80 text-neutral-500 dark:text-neutral-400"
+                  class="px-2 py-0.5 text-[11px] font-mono rounded bg-neutral-100/60 dark:bg-neutral-800/60 text-neutral-500 dark:text-neutral-400 border border-neutral-200/40 dark:border-neutral-700/40"
                 >
-                  {{ tag }}
+                  #{{ tag }}
                 </span>
               </div>
-            </NuxtLink>
+            </div>
           </div>
 
-          <div v-if="item.image" class="w-full md:w-1/2 pl-12 md:pl-0">
+          <!-- 侧 B：黑白极客年度金句卡片（主题自适应，复制相融，500ms 悬浮缩放，视觉核心聚焦） -->
+          <div class="w-full md:w-1/2 pl-12 md:pl-0">
             <NuxtLink
               :to="item.path"
-              class="group/img relative block rounded-xl overflow-hidden border border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-100 dark:bg-neutral-900 shadow-xs transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-700"
+              class="group/quote relative block rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md p-5 sm:p-6 shadow-xs hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-500 ease-out hover:scale-[1.02] overflow-hidden"
             >
-              <div class="relative aspect-[16/9] overflow-hidden">
-                <img
-                  :src="item.image"
-                  :alt="item.imageAlt"
-                  loading="lazy"
-                  class="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover/img:scale-105 opacity-90 group-hover/img:opacity-100"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <!-- 悬浮背景淡光晕 -->
+              <div
+                class="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-primary/5 dark:bg-primary/10 blur-2xl transition-transform duration-500 ease-out group-hover/quote:scale-150"
+              />
 
-                <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white/90">
-                  <span class="text-xs font-mono font-medium truncate">
-                    {{ item.year }} · {{ item.stage }}
+              <!-- 顶部极客工具栏与复制按钮 -->
+              <div class="flex items-center justify-between gap-2 mb-4">
+                <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-1 select-none">
+                    <span class="h-2 w-2 rounded-full bg-red-400/80 dark:bg-red-500/70" />
+                    <span class="h-2 w-2 rounded-full bg-amber-400/80 dark:bg-amber-500/70" />
+                    <span class="h-2 w-2 rounded-full bg-emerald-400/80 dark:bg-emerald-500/70" />
+                  </div>
+                  <span class="text-xs font-mono text-neutral-400 dark:text-neutral-500">
+                    // {{ item.year }}_THOUGHT
                   </span>
+                </div>
+
+                <!-- 复制按钮：无缝相融于浅色/深色背景 -->
+                <button
+                  type="button"
+                  :title="copiedPath === item.path ? '已复制到剪贴板' : '复制年度独白'"
+                  class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all duration-200 border cursor-pointer select-none"
+                  :class="
+                    copiedPath === item.path
+                      ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30 dark:border-emerald-500/30 shadow-xs'
+                      : 'text-neutral-400 dark:text-neutral-500 bg-neutral-100/60 dark:bg-neutral-800/60 hover:bg-neutral-200/80 dark:hover:bg-neutral-700/80 hover:text-neutral-800 dark:hover:text-neutral-200 border-neutral-200/50 dark:border-neutral-700/50'
+                  "
+                  @click.prevent.stop="copyQuote(item.quote, item.path)"
+                >
+                  <UIcon
+                    :name="copiedPath === item.path ? 'i-lucide-check' : 'i-lucide-copy'"
+                    class="h-3.5 w-3.5 transition-transform duration-200"
+                    :class="{ 'scale-110': copiedPath === item.path }"
+                  />
+                  <span>{{ copiedPath === item.path ? "已复制" : "复制" }}</span>
+                </button>
+              </div>
+
+              <!-- 黑底白字 / 白底黑字 核心独白文案 -->
+              <div
+                class="relative p-4 sm:p-5 rounded-xl border border-neutral-200/60 dark:border-neutral-800/80 bg-neutral-50/80 dark:bg-neutral-950/70 backdrop-blur-xs transition-colors duration-300"
+              >
+                <span
+                  class="pointer-events-none absolute -top-1.5 left-2 text-3xl font-serif text-neutral-300 dark:text-neutral-700 select-none leading-none"
+                >
+                  “
+                </span>
+                <p
+                  class="relative z-10 text-sm sm:text-base font-medium text-neutral-900 dark:text-neutral-100 leading-relaxed"
+                >
+                  {{ item.quote }}
+                </p>
+              </div>
+
+              <!-- 底部直达链接 -->
+              <div
+                class="flex items-center justify-between pt-3 mt-3 border-t border-neutral-100 dark:border-neutral-800/80 text-xs font-mono text-neutral-400 dark:text-neutral-500"
+              >
+                <span>{{ item.stage }}</span>
+                <div class="flex items-center gap-1 group-hover/quote:text-neutral-900 dark:group-hover/quote:text-white transition-colors">
+                  <span>完整复盘</span>
+                  <UIcon
+                    name="i-lucide-arrow-right"
+                    class="h-3.5 w-3.5 transition-transform duration-500 ease-out group-hover/quote:translate-x-1"
+                  />
                 </div>
               </div>
             </NuxtLink>
@@ -285,3 +384,5 @@ const getWatermarkStyle = (index: number) => {
     </div>
   </section>
 </template>
+
+
