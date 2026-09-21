@@ -3,6 +3,8 @@ declare module "nuxt/schema" {
   interface PublicRuntimeConfig {
     /** content 下带 .navigation.yml 的一级目录名，如 ["1.guide", "2.writing"] */
     contentCategoryStems: string[];
+    /** public/downloads 下 zip 的相对路径 → 体积（如 android/foo.zip） */
+    demoAssets: Record<string, { size: number }>;
     /** @nuxtjs/i18n 注入的客户端 i18n 配置（启用多语言时存在） */
     i18n?: {
       defaultLocale?: string;
@@ -13,6 +15,7 @@ declare module "nuxt/schema" {
 declare module "@nuxt/schema" {
   interface PublicRuntimeConfig {
     contentCategoryStems: string[];
+    demoAssets: Record<string, { size: number }>;
     i18n?: {
       defaultLocale?: string;
     };

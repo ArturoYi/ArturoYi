@@ -49,7 +49,18 @@ const tocDrawerOpen = ref(false);
           :color="contentNavVariants.color"
           default-open
           trailing-icon="i-lucide-chevron-right"
-          :ui="{ linkTrailingIcon: 'group-data-[state=open]:rotate-90' }"
+          class="min-w-0"
+          :ui="{
+            linkTrailingIcon: 'group-data-[state=open]:rotate-90',
+            list: 'min-w-0',
+            listWithChildren: 'min-w-0',
+            item: 'min-w-0',
+            itemWithChildren: 'min-w-0',
+            link: 'min-w-0',
+            linkLabel: 'min-w-0 truncate',
+            linkTitle: 'min-w-0 truncate',
+            linkText: 'min-w-0 truncate',
+          }"
         />
       </template>
     </UDrawer>

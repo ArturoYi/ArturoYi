@@ -23,6 +23,8 @@ export default defineAppConfig({
     allLabel: "全部",
     allIcon: "i-lucide-library",
     articlesPath: "/articles",
+    demosPath: "/demos",
+    demosLabel: "示例",
   },
 
   // 全局 SEO 元信息

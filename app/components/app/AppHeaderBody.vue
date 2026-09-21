@@ -24,6 +24,17 @@ const navMenuVariants = useUIConfig("navigationMenu");
         :variant="contentNavVariants.variant ?? 'link'"
         :color="contentNavVariants.color"
         :navigation="sidebarNavigation"
+        class="min-w-0"
+        :ui="{
+          list: 'min-w-0',
+          listWithChildren: 'min-w-0',
+          item: 'min-w-0',
+          itemWithChildren: 'min-w-0',
+          link: 'min-w-0',
+          linkLabel: 'min-w-0 truncate',
+          linkTitle: 'min-w-0 truncate',
+          linkText: 'min-w-0 truncate',
+        }"
       />
     </template>
 

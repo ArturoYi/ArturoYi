@@ -11,6 +11,8 @@ declare module "nuxt/schema" {
       allLabel?: string;
       allIcon?: string;
       articlesPath?: string;
+      demosPath?: string;
+      demosLabel?: string;
     };
   }
 
@@ -35,6 +37,8 @@ declare module "@nuxt/schema" {
       allLabel?: string;
       allIcon?: string;
       articlesPath?: string;
+      demosPath?: string;
+      demosLabel?: string;
     };
   }
 

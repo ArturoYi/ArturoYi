@@ -10,6 +10,9 @@
   逻辑与官方版一致，仅通过 ProseCodeTreeSlotSync 在 render 中读取 default slot，
   再写入 slotFlatItems，供 flatItems / 文件树与右侧代码面板使用。
 
+  右侧代码不能在父组件 render 里读 lastSelectedItem：slot 同步发生在子组件
+  render，父级当时还是空的。选中项在 SlotSync 里解析，由 ProseCodeTreePane 再读。
+
   维护：@nuxt/ui 上游修复后可删除本文件，恢复使用内置 ProseCodeTree。
 -->
 <script lang="ts">
@@ -86,6 +89,22 @@ function transformSlot(slot: any, index: number): any {
 
 // 无 props.items 时，由下方模板中的 <ProseCodeTreeSlotSync> 在 render 内同步 slot 内容
 const slotFlatItems = shallowRef<TreeItem[]>([])
+const lastSelectedItem = ref<TreeItem>()
+const initialPath = props.modelValue ?? props.defaultValue
+const model = ref(initialPath ? { path: initialPath } : undefined)
+
+function resolveSelectedItem(path?: string) {
+  const items = props.items || slotFlatItems.value
+  if (!items.length) {
+    return
+  }
+
+  const matched = path
+    ? items.find(item => item.label === path)
+    : undefined
+
+  lastSelectedItem.value = matched ?? items[0]
+}
 
 /** 仅负责在 render 函数内调用 slots.default()，不渲染 DOM */
 const ProseCodeTreeSlotSync = defineComponent({
@@ -93,8 +112,17 @@ const ProseCodeTreeSlotSync = defineComponent({
   setup(_, { slots }) {
     return () => {
       slotFlatItems.value = (slots.default?.()?.flatMap(transformSlot).filter(Boolean) || []) as TreeItem[]
+      resolveSelectedItem(model.value?.path)
       return null
     }
+  },
+})
+
+/** 作为 SlotSync 之后的子组件读取选中项，SSR 才能带上右侧代码 */
+const ProseCodeTreePane = defineComponent({
+  name: 'ProseCodeTreePane',
+  setup() {
+    return () => lastSelectedItem.value?.component ?? null
   },
 })
 
@@ -155,15 +183,13 @@ function getExpandedPaths(path?: string) {
   return parts.slice(0, -1).map((_, index) => parts.slice(0, index + 1).join('/'))
 }
 
-const initialPath = props.modelValue ?? props.defaultValue
-const model = ref(initialPath ? { path: initialPath } : undefined)
-const lastSelectedItem = ref<TreeItem>()
 const expanded = ref(getExpandedPaths(model.value?.path))
 
 watch(model, (value) => {
   if (value?.path !== props.modelValue) {
     emits('update:modelValue', value?.path)
   }
+  resolveSelectedItem(value?.path)
 })
 
 watch(() => props.modelValue, (value) => {
@@ -181,6 +207,8 @@ watch(() => props.modelValue, (value) => {
 })
 
 watch(flatItems, (newItems, oldItems) => {
+  resolveSelectedItem(model.value?.path)
+
   if (!props.expandAll) {
     return
   }
@@ -190,13 +218,6 @@ watch(flatItems, (newItems, oldItems) => {
 
   if (newLabels !== oldLabels) {
     expanded.value = getExpandedPaths()
-  }
-})
-
-watch(model, (value) => {
-  const item = flatItems.value.find(item => value?.path === item.label)
-  if (item?.component) {
-    lastSelectedItem.value = item
   }
 }, { immediate: true })
 </script>
@@ -270,7 +291,7 @@ watch(model, (value) => {
     </TreeRoot>
 
     <div :class="ui.content({ class: props.ui?.content })">
-      <component :is="lastSelectedItem?.component" />
+      <ProseCodeTreePane />
     </div>
   </div>
 </template>

@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       contentCategoryStems: [],
+      demoAssets: {},
     },
   },
   // 继承 Docus 文档主题，获得文档站点预设布局与组件
@@ -32,6 +33,8 @@ export default defineNuxtConfig({
       crawlLinks: true,
       // 单个路由预渲染失败时不中断整体构建
       failOnError: false,
+      // 示例 zip 由 server/routes 按需输出，不预渲染成 HTML
+      ignore: ["/downloads/**"],
     },
   },
 
@@ -39,6 +42,8 @@ export default defineNuxtConfig({
   modules: [
     // 扫描 content 一级目录的 .navigation.yml，写入 runtimeConfig
     "./modules/content-categories",
+    // 扫描 public/downloads 下的 zip，写入体积供下载卡片使用
+    "./modules/demo-assets",
     // 草稿过滤：frontmatter 中 draft: true 的文档不进入导航
     function draftFilterModule(_options: Record<string, unknown>, nuxt: Nuxt) {
       // Content 注册此 hook 于 NuxtHooks；Nuxt.hooks 类型为 NuxtHooks$1
@@ -57,6 +62,8 @@ export default defineNuxtConfig({
   routeRules: {
     // 默认所有路由静态预渲染
     "/**": { prerender: true },
+    // 示例 zip：不预渲染，避免 Docus 把它当成文档页
+    "/downloads/**": { prerender: false },
     // 面试栏目没有落地页，根路径落到第一篇真题
     "/interview": { redirect: "/interview/flutter-interview1" },
   },
@@ -96,6 +103,9 @@ export default defineNuxtConfig({
             "go",
             "java",
             "kotlin",
+            "c",
+            "cpp",
+            "cmake",
             "dart",
             "swift",
             "ruby",

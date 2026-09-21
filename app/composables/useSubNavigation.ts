@@ -1,8 +1,10 @@
 import type { ContentNavigationItem } from "@nuxt/content";
+import { buildDemoCategoryTabs } from "../utils/demos";
 import {
   buildArchiveCategoryTabs,
   getCategoryStemFromItem,
   isAllScopeRoute,
+  normalizeCategoryToken,
   shouldShowCategorySidebar,
 } from "../utils/category-tabs";
 import {
@@ -23,6 +25,7 @@ export function getFirstPagePath(item: ContentNavigationItem): string {
  * 分类导航状态（归档页顶栏 Tab + 文档页侧栏）。
  *
  * - archive 布局：AppHeaderBottom 展示「全部」+ 各分类（sections）
+ *   /articles 用栏目树；/demos 只用已有示例的栏目
  * - docs 布局：不展示 AppHeaderBottom；仅 showCategorySidebar 时展示左侧栏目树
  */
 export function useSubNavigation(
@@ -48,6 +51,7 @@ export function useSubNavigation(
             allLabel?: string;
             allIcon?: string;
             articlesPath?: string;
+            demosPath?: string;
           }
         | undefined,
   );
@@ -57,6 +61,8 @@ export function useSubNavigation(
   const articlesPath = computed(
     () => navConfig.value?.articlesPath ?? "/articles",
   );
+  const demosPath = computed(() => navConfig.value?.demosPath ?? "/demos");
+  const isDemosArchive = computed(() => route.path === demosPath.value);
 
   const categories = computed(() => {
     const nav = navigation?.value ?? [];
@@ -93,17 +99,32 @@ export function useSubNavigation(
   const showCategoryChrome = showCategorySidebar;
 
   /**
-   * 顶栏第二行（AppHeaderBottom）仅在归档页启用；
+   * 顶栏第二行（AppHeaderBottom）仅在文章归档与示例目录启用；
    * 文档页永远不挂载 AppHeaderBottom。
    */
   const subNavigationMode = computed(() => {
     if (route.meta.layout !== "archive") return undefined;
+    if (route.path !== articlesPath.value && !isDemosArchive.value) {
+      return undefined;
+    }
     return navConfig.value?.sub;
   });
 
   /** 供 AppHeaderBottom UNavigationMenu 使用：全部 + 各分类 */
   const sections = computed(() => {
     if (route.meta.layout !== "archive") return [];
+    if (isDemosArchive.value) {
+      return buildDemoCategoryTabs({
+        categories: categories.value,
+        allLabel: allLabel.value,
+        allIcon: allIcon.value,
+        demosPath: demosPath.value,
+        activeCategoryToken: activeCategoryStem.value
+          ? normalizeCategoryToken(activeCategoryStem.value)
+          : undefined,
+      });
+    }
+    if (route.path !== articlesPath.value) return [];
     return buildArchiveCategoryTabs({
       categories: categories.value,
       allLabel: allLabel.value,
@@ -159,6 +180,7 @@ export function useSubNavigation(
     categories,
     allLabel,
     articlesPath,
+    demosPath,
     activeCategoryStem,
     getCategoryStemFromItem,
   };
