@@ -44,7 +44,7 @@ export const demoProjects: DemoProject[] = [
     id: "hidden-dex-minidemo",
     title: "hidden-dex-minidemo",
     description:
-      "把业务实现编成加密 DEX。运行时由 so 解密后在内存里加载。主 DEX 只保留薄接口。",
+      "把业务实现编成加密 DEX。运行时由 so 解密后在内存里加载。主 DEX 只保留公开接口。",
     category: "android",
     filename: "hidden-dex-minidemo.zip",
     docs: "/android/hidden-hardening",

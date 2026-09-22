@@ -1,3 +1,4 @@
+import type { Nuxt, ViteConfig } from "nuxt/schema";
 import { proseCodeIcons } from "./config/prose-code-icons";
 
 export default defineNuxtConfig({
@@ -18,7 +19,7 @@ export default defineNuxtConfig({
     // 站点名称
     name: "ArturoYi",
     // 站点 canonical URL，优先读取环境变量
-    url: process.env.NUXT_PUBLIC_SITE_URL || "https://arturoyi.dev",
+    url: process.env.NUXT_PUBLIC_SITE_URL || "https://chenyiren.top",
     // 站点描述
     description: "个人技术博客与知识库 — 记录学习、实践与思考",
   },
@@ -44,6 +45,8 @@ export default defineNuxtConfig({
     "./modules/content-categories",
     // 扫描 public/downloads 下的 zip，写入体积供下载卡片使用
     "./modules/demo-assets",
+    // 覆盖 /raw/**.md，返回 content/ 原文而不是 AST 反序列化结果
+    "./modules/raw-markdown",
     // 草稿过滤：frontmatter 中 draft: true 的文档不进入导航
     function draftFilterModule(_options: Record<string, unknown>, nuxt: Nuxt) {
       // Content 注册此 hook 于 NuxtHooks；Nuxt.hooks 类型为 NuxtHooks$1
@@ -121,7 +124,7 @@ export default defineNuxtConfig({
   // @nuxtjs/llms 模块配置，生成 llms.txt 供 AI 爬虫读取
   llms: {
     // 站点域名，与 site.url 保持一致
-    domain: process.env.NUXT_PUBLIC_SITE_URL || "https://arturoyi.dev",
+    domain: process.env.NUXT_PUBLIC_SITE_URL || "https://chenyiren.top",
     title: "ArturoYi",
     description: "个人技术博客与知识库 — 记录学习、实践与思考",
   },

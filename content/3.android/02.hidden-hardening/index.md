@@ -1,20 +1,20 @@
 ---
-title: 总览
-description: hidden-dex-minidemo 把业务实现编成加密 DEX。运行时由 so 解密后在内存里加载。主 DEX 只保留薄接口。
+title: 安卓代码加固：总览
+description: hidden-dex-minidemo 把业务实现编成加密 DEX。运行时由 so 解密后在内存里加载。主 DEX 只保留公开接口。
 date: 2026-09-21
 navigation:
   icon: i-lucide-map
 seo:
-  title: Hidden DEX 代码加固总览
+  title: 安卓代码加固：Hidden DEX 总览
   description: 梳理 hidden-dex-minidemo 当前使用的加固方式：加密 DEX、Native 解密、内存加载、指令分发、XOR 混淆、密钥外置、依赖隔离、构建校验、防录屏与 ABI 门禁。
 links:
-  - label: 加密DEX
+  - label: 安卓代码加固（1）：加密DEX
     icon: i-lucide-lock
     to: /android/hidden-hardening/encrypt-dex
-  - label: Native解密
+  - label: 安卓代码加固（2）：Native解密
     icon: i-lucide-cpu
     to: /android/hidden-hardening/native-decrypt
-  - label: 指令分发
+  - label: 安卓代码加固（4）：指令分发
     icon: i-lucide-hash
     to: /android/hidden-hardening/opcode-dispatch
 categories:
@@ -68,9 +68,9 @@ object HiddenSdk {
 
 | 模块 | 给接入方吗 | 进主 DEX？ |
 | --- | --- | --- |
-| `:hidden-sdk` | 只交付这个 AAR | 接口、JNI、KeepAlive 壳 |
+| `:hidden-sdk` | 只交付这个 AAR | 接口、JNI、KeepAlive 占位类 |
 | `:hidden-landing-page` | 不交付 | 否，只进加密 payload |
-| `:app` | 不发布 | 权限、清单壳、Compose 页 |
+| `:app` | 不发布 | 权限、清单占位、Compose 页 |
 
 ## 十种加固方式
 
@@ -84,7 +84,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    加密DEX
+    安卓代码加固（1）：加密DEX
 
     #description
     构建期把 landing-page 打成 AES-256-GCM 密文，文件头为 HDX1。
@@ -98,7 +98,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    Native解密
+    安卓代码加固（2）：Native解密
 
     #description
     自实现 AES-GCM 在 so 里运行，Java 不接触明文 DEX。
@@ -112,7 +112,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    内存加载
+    安卓代码加固（3）：内存加载
 
     #description
     InMemoryDexClassLoader 接收 ByteBuffer，不落明文文件。
@@ -126,7 +126,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    指令分发
+    安卓代码加固（4）：指令分发
 
     #description
     公开入口只有 invoke(op)，对照表不进入 AAR。
@@ -140,7 +140,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    XOR混淆
+    安卓代码加固（5）：XOR混淆
 
     #description
     资源路径、类名、方法名在 so 里按 0x5A 异或。
@@ -154,7 +154,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    密钥外置
+    安卓代码加固（6）：密钥外置
 
     #description
     AAR 不带密钥。CI 用环境变量，本地用 gitignore 文件。
@@ -168,7 +168,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    依赖隔离
+    安卓代码加固（7）：依赖隔离
 
     #description
     compileOnly 加解析期检查，禁止明文 class 进入 APK。
@@ -182,7 +182,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    构建校验
+    安卓代码加固（8）：构建校验
 
     #description
     AAR、APK、源码三道检查，漏依赖则无法通过编译。
@@ -196,7 +196,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    防录屏
+    安卓代码加固（9）：防录屏
 
     #description
     FLAG_SECURE。未 init 也会给当前页加上该标志。
@@ -210,7 +210,7 @@ object HiddenSdk {
     class: col-span-2 lg:col-span-1
     ---
     #title
-    ABI门禁
+    安卓代码加固（10）：ABI门禁
 
     #description
     so 与加密实现约定版本 12，对不上就拒绝加载。
@@ -248,6 +248,6 @@ Java 只传整数指令，native 再通过 `GetMethodID` 调用实现。
 
 ## 下一步
 
-- 从 [加密DEX](/android/hidden-hardening/encrypt-dex) 了解密文如何生成
+- 从 [安卓代码加固（1）：加密DEX](/android/hidden-hardening/encrypt-dex) 了解密文如何生成
 - 对照仓库 `接入与使用.md` 查看接入约定
 - 到 [示例项目](/demos) 按分类浏览全部可下载工程
