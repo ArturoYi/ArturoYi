@@ -99,6 +99,13 @@ export default defineAppConfig({
   },
   ui: {
     prose: {
+      codeIcon: {
+        python: "i-vscode-icons-file-type-python",
+        kotlin: "i-vscode-icons-file-type-kotlin",
+        swift: "i-vscode-icons-file-type-swift",
+        dart: "i-vscode-icons-file-type-dartlang",
+        javascript: "i-vscode-icons-file-type-js",
+      },
       img: {
         slots: {
           base: "rounded-md mx-auto block h-auto",
