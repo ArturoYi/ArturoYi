@@ -56,6 +56,11 @@ function isArticlePage(page: ArticlePreview): boolean {
   return lastStemSegment !== "index";
 }
 
+/** frontmatter `publish: false` 的文章先不出现在归档 */
+function isPublishedArticle(page: ArticlePreview): boolean {
+  return pickField(page, "publish") !== false;
+}
+
 function readMeta(page: ArticlePreview): Record<string, unknown> {
   return (page.meta ?? {}) as Record<string, unknown>;
 }
@@ -137,6 +142,7 @@ function articleCategoryLabel(page: ArticlePreview): string {
 const articles = computed(() =>
   (pages.value ?? [])
     .filter(isArticlePage)
+    .filter(isPublishedArticle)
     .sort((a, b) => {
       const byDate = articleTimestamp(b) - articleTimestamp(a);
       if (byDate !== 0) return byDate;

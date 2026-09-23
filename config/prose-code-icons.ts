@@ -30,6 +30,7 @@ export const proseCodeIcons = [
   "vscode-icons:file-type-cpp",
   "vscode-icons:file-type-cmake",
   // content/.navigation.yml 栏目 icon（运行时字符串）
+  "lucide:binary",
   "lucide:git-commit",
   "lucide:feather",
   "simple-icons:android",

@@ -41,11 +41,14 @@ export default defineEventHandler(async (event) => {
 
   for (const collection of pageCollections) {
     const page = await queryCollection(event, collection as never)
-      .select("stem", "extension")
+      .select("stem", "extension", "meta")
       .path(path)
       .first();
 
     if (!page?.stem || !page.extension) continue;
+
+    const meta = (page.meta ?? {}) as { publish?: unknown };
+    if (meta.publish === false) continue;
 
     const source = await readSourceMarkdown(page.stem, page.extension);
     if (source !== null) {
