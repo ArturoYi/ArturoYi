@@ -22,7 +22,7 @@ export type CommonMarkdownOptions = {
 
 /**
  * 把 Docus / MDC 源文转成常见 Markdown：
- * 提示框 → 引用，步骤 / 手风琴 → 标题，卡片 → 列表，代码组 → 连续代码块。
+ * 提示框 → 引用块，步骤 / 手风琴 → 标题，卡片 → 列表，代码组 → 连续代码块。
  */
 export function mdcToCommonMarkdown(
   source: string,
@@ -146,13 +146,22 @@ function takeMdcBlock(
   let index = start + 1;
 
   while (index < lines.length) {
-    if (matchBlockClose(lines[index] ?? "", open.colons)) {
+    const line = lines[index] ?? "";
+    // 代码块里的 :: / ``` 不能当成组件结束，否则复杂正文会被截断
+    const fence = matchFenceOpen(line);
+    if (fence) {
+      const [count] = takeFence(lines, index, fence);
+      inner.push(...lines.slice(index, index + count));
+      index += count;
+      continue;
+    }
+    if (matchBlockClose(line, open.colons)) {
       return [
         index - start + 1,
         { name: open.name, attrs: open.attrs, inner: inner.join("\n") },
       ];
     }
-    inner.push(lines[index] ?? "");
+    inner.push(line);
     index += 1;
   }
 
@@ -273,13 +282,11 @@ function extractSlots(text: string): { slots: Record<string, string>; body: stri
   };
 }
 
+/** 提示框写成原生引用。每一行都加 `>`，代码块、加粗和链接留在引用里。 */
 function toBlockquote(label: string, body: string): string {
-  const content = body.trim() || label;
-  const lines = content.split("\n");
-  const quoted = lines.map((line) => (line.trim() ? `> ${line}` : ">"));
-  if (content === label) {
-    return `> **${label}**`;
-  }
+  const content = body.trim();
+  if (!content) return `> **${label}**`;
+  const quoted = content.split("\n").map((line) => (line.trim() ? `> ${line}` : ">"));
   return [`> **${label}**`, ">", ...quoted].join("\n");
 }
 
@@ -311,8 +318,8 @@ function formatDemoDownload(props: Record<string, string>): string {
     (listed
       ? demoDownloadPath(listed)
       : props.filename
-        ? `/downloads/${props.category || listed?.category || "other"}/${props.filename}`
-        : listed?.docs || "");
+        ? `/downloads/${props.category || "other"}/${props.filename}`
+        : "");
 
   const link = href ? `[下载 ${title}](${href})` : `**${title}**`;
   return description ? `${link} — ${description}` : link;

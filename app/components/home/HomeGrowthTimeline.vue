@@ -20,11 +20,26 @@ interface TimelineItem {
 
 const { categories } = useSubNavigation();
 
-const { data: pages } = await useAsyncData("home-growth-timeline", () =>
-  queryCollection("docs")
-    .where("path", "NOT LIKE", "%.navigation")
-    .select("title", "path", "description", "stem", "meta")
-    .all(),
+function findAnnualStem() {
+  const match = categories.value.find((item) =>
+    isAnnualReviewCategory({ title: item.title, stem: item.stem }),
+  );
+  return match ? getCategoryStemFromItem(match) : undefined;
+}
+
+const annualStem = findAnnualStem();
+
+/** 只取年度总结目录，避免首页 payload 带上全部文档 */
+const { data: pages } = await useAsyncData(
+  `home-growth-timeline:${annualStem ?? "none"}`,
+  () => {
+    if (!annualStem) return Promise.resolve([]);
+    return queryCollection("docs")
+      .where("stem", "LIKE", `${annualStem}/%`)
+      .where("path", "NOT LIKE", "%.navigation")
+      .select("title", "path", "description", "stem", "meta")
+      .all();
+  },
 );
 
 type ArticlePreview = NonNullable<typeof pages.value>[number];
@@ -91,15 +106,8 @@ function extractYear(page: ArticlePreview): string {
   return fromTitle?.[1] ?? "";
 }
 
-const annualStem = computed(() => {
-  const match = categories.value.find((item) =>
-    isAnnualReviewCategory({ title: item.title, stem: item.stem }),
-  );
-  return match ? getCategoryStemFromItem(match) : undefined;
-});
-
 const timelineData = computed<TimelineItem[]>(() => {
-  const stem = annualStem.value;
+  const stem = annualStem;
   return (pages.value ?? [])
     .filter(isArticlePage)
     .filter((page) =>

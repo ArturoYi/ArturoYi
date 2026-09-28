@@ -1,4 +1,4 @@
-import type { Nuxt, ViteConfig } from "nuxt/schema";
+import type { ViteConfig } from "nuxt/schema";
 import { proseCodeIcons } from "./config/prose-code-icons";
 
 export default defineNuxtConfig({
@@ -47,37 +47,8 @@ export default defineNuxtConfig({
     "./modules/demo-assets",
     // 覆盖 /raw/**.md，返回 content/ 原文而不是 AST 反序列化结果
     "./modules/raw-markdown",
-    // 未发布文档不进入导航：draft: true，或 publish: false
-    function draftFilterModule(_options: Record<string, unknown>, nuxt: Nuxt) {
-      // Content 注册此 hook 于 NuxtHooks；Nuxt.hooks 类型为 NuxtHooks$1
-      nuxt.hooks.hook(
-        "content:file:afterParse" as never,
-        ((ctx: {
-          content: {
-            draft?: unknown;
-            publish?: unknown;
-            navigation?: unknown;
-            title?: string;
-            description?: string;
-            seo?: { title?: string; description?: string };
-            meta?: { draft?: unknown; publish?: unknown };
-          };
-        }) => {
-          const draft = ctx.content.draft ?? ctx.content.meta?.draft;
-          const publish = ctx.content.publish ?? ctx.content.meta?.publish;
-          if (draft === true || publish === false) {
-            ctx.content.navigation = false;
-            // 搜索索引读的是标题和描述，清空后未发布稿不会被搜到
-            ctx.content.title = "";
-            ctx.content.description = "";
-            if (ctx.content.seo) {
-              ctx.content.seo.title = "";
-              ctx.content.seo.description = "";
-            }
-          }
-        }) as never,
-      );
-    },
+    // 未发布文档不进入导航，并生成 path 名单供路由中间件使用
+    "./modules/draft-filter",
   ],
 
   // 路由级别规则，覆盖全局预渲染与 robots 行为

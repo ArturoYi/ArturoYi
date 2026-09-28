@@ -1,25 +1,21 @@
+import { unpublishedContentPaths } from "#unpublished-content-paths";
+
 /**
  * `publish: false` 的文档不对外展示。归档和侧栏另有过滤，这里挡住直接打开的地址。
+ * 名单在构建期生成，中间件不再查询 docs，避免浏览器下载整库 SQL。
  */
-export default defineNuxtRouteMiddleware(async (to) => {
+const unpublishedContentPathSet = new Set(unpublishedContentPaths);
+
+export default defineNuxtRouteMiddleware((to) => {
   const path = to.path.length > 1 ? to.path.replace(/\/$/, "") : to.path;
   if (shouldSkipUnpublishedCheck(path)) return;
+  if (!unpublishedContentPathSet.has(path)) return;
 
-  const page = await queryCollection("docs")
-    .path(path)
-    .select("meta")
-    .first();
-
-  if (!page) return;
-
-  const meta = (page.meta ?? {}) as { publish?: unknown };
-  if (meta.publish === false) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Page not found",
-      fatal: true,
-    });
-  }
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Page not found",
+    fatal: true,
+  });
 });
 
 function shouldSkipUnpublishedCheck(path: string) {

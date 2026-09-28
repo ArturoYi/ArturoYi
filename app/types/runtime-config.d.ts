@@ -22,4 +22,9 @@ declare module "@nuxt/schema" {
   }
 }
 
+declare module "#unpublished-content-paths" {
+  /** `publish: false` 的文档 path，由 modules/draft-filter 在构建期写入 */
+  export const unpublishedContentPaths: readonly string[];
+}
+
 export {};

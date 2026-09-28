@@ -28,7 +28,7 @@ export function resolveDemoCategoryMeta(
 ): { title: string; icon?: string; token: string } {
   const token = normalizeCategoryToken(category);
   const match = navCategories.find((item) => {
-    const stem = getCategoryStemFromItem(item as ContentNavigationItem);
+    const stem = getCategoryStemFromItem(item as unknown as ContentNavigationItem);
     return !!stem && normalizeCategoryToken(stem) === token;
   });
 
