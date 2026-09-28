@@ -17,6 +17,9 @@
  * 也可用栏目目录名（3.android）。新增示例：放入 zip 并在下方登记。
  * 加入 zip 后如需显示体积，重启一次 nuxt dev。
  *
+ * 不提供 zip、只跳到外部仓库时，省略 filename，填写 href。
+ * 目录页主按钮会打开该链接，不再显示下载。
+ *
  * Git LFS（.gitattributes 已跟踪 public/downloads 下的 zip）：
  *   1. 安装：brew install git-lfs
  *   2. 每个克隆一次：git lfs install
@@ -31,8 +34,10 @@ export type DemoProject = {
   description: string;
   /** 分类：android / ios / flutter / web … */
   category: string;
-  /** 位于 public/downloads/<category>/ 下的 zip 文件名 */
-  filename: string;
+  /** 位于 public/downloads/<category>/ 下的 zip 文件名。外链示例可省略 */
+  filename?: string;
+  /** 外链。设置后主按钮打开该地址，不再下载 zip */
+  href?: string;
   /** 对应文档路径，目录页会显示「查看文档」 */
   docs?: string;
   icon?: string;
@@ -51,6 +56,17 @@ export const demoProjects: DemoProject[] = [
     icon: "i-lucide-shield",
     tags: ["HiddenDEX", "加固"],
   },
+  {
+    id: "lockify",
+    title: "Lockify",
+    description:
+      "纯本地的密码保存应用。账号、银行卡、证件和笔记只写在当前设备上，不设账号、不上云。",
+    category: "flutter",
+    href: "https://github.com/ArturoYi/Lockify",
+    docs: "/blog/lockify",
+    icon: "i-lucide-lock",
+    tags: ["Flutter", "本地存储"],
+  },
 ];
 
 export function findDemoById(id: string): DemoProject | undefined {
@@ -58,13 +74,14 @@ export function findDemoById(id: string): DemoProject | undefined {
 }
 
 /** 相对 public/downloads/ 的路径，与扫描模块、下载 URL 共用 */
-export function demoAssetKey(demo: Pick<DemoProject, "category" | "filename">): string {
+export function demoAssetKey(demo: { category: string; filename: string }): string {
   return `${demo.category}/${demo.filename}`;
 }
 
-export function demoDownloadPath(
-  demo: Pick<DemoProject, "category" | "filename">,
-): string {
+export function demoDownloadPath(demo: {
+  category: string;
+  filename: string;
+}): string {
   return `/downloads/${demoAssetKey(demo)}`;
 }
 

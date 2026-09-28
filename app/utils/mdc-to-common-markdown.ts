@@ -313,15 +313,16 @@ function formatDemoDownload(props: Record<string, string>): string {
   const listed = props.demo ? findDemoById(props.demo) : undefined;
   const title = props.title || listed?.title || props.demo || "示例项目";
   const description = props.description || listed?.description || "";
+  const external = props.href || listed?.href || "";
+  const filename = props.filename || listed?.filename || "";
+  const category = props.category || listed?.category || "other";
   const href =
     props.src ||
-    (listed
-      ? demoDownloadPath(listed)
-      : props.filename
-        ? `/downloads/${props.category || "other"}/${props.filename}`
-        : "");
+    external ||
+    (filename ? demoDownloadPath({ category, filename }) : "");
+  const label = external && !props.src ? title : `下载 ${title}`;
 
-  const link = href ? `[下载 ${title}](${href})` : `**${title}**`;
+  const link = href ? `[${label}](${href})` : `**${title}**`;
   return description ? `${link} — ${description}` : link;
 }
 

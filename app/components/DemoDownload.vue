@@ -14,6 +14,8 @@ const props = defineProps<{
   description?: string;
   category?: string;
   filename?: string;
+  /** 外链。设置后主按钮打开该地址，不再下载 zip */
+  href?: string;
   /** 覆盖默认 /downloads/<category>/<filename> */
   src?: string;
   docs?: string;
@@ -34,8 +36,10 @@ const listed = computed(() =>
 const resolved = computed(() => {
   const category = props.category ?? listed.value?.category ?? "other";
   const filename = props.filename ?? listed.value?.filename ?? "";
+  const externalHref = props.href ?? listed.value?.href ?? "";
   const href =
-    props.src ?? (filename ? demoDownloadPath({ category, filename }) : "");
+    props.src ??
+    (externalHref || (filename ? demoDownloadPath({ category, filename }) : ""));
 
   return {
     title:
@@ -46,6 +50,7 @@ const resolved = computed(() => {
     category,
     filename,
     href,
+    external: Boolean(externalHref) && !props.src,
     docs: props.docs ?? listed.value?.docs,
     icon: props.icon ?? listed.value?.icon ?? "i-lucide-package",
     assetKey: filename ? demoAssetKey({ category, filename }) : "",
@@ -53,8 +58,33 @@ const resolved = computed(() => {
 });
 
 const unknownDemo = computed(
-  () => Boolean(props.demo) && !listed.value && !props.src && !props.filename,
+  () =>
+    Boolean(props.demo) &&
+    !listed.value &&
+    !props.src &&
+    !props.filename &&
+    !props.href,
 );
+
+const externalAction = computed(() => {
+  const href = resolved.value.href;
+  if (!resolved.value.external || !href) return undefined;
+  let github = false;
+  let hint = href;
+  try {
+    const url = new URL(href);
+    github = url.hostname === "github.com";
+    const parts = url.pathname.split("/").filter(Boolean);
+    hint = github && parts.length >= 2 ? `${parts[0]}/${parts[1]}` : url.hostname;
+  } catch {
+    github = href.includes("github.com");
+  }
+  return {
+    label: github ? "打开 GitHub" : "打开链接",
+    icon: github ? "i-simple-icons-github" : "i-lucide-external-link",
+    hint,
+  };
+});
 
 const asset = computed(() => {
   const key = resolved.value.assetKey;
@@ -129,15 +159,20 @@ const showDocsLink = computed(() => {
             {{ resolved.description }}
           </p>
 
-          <p class="text-dimmed text-xs">
-            <span v-if="resolved.filename">{{ resolved.filename }}</span>
-            <template v-if="sizeLabel">
-              <span v-if="resolved.filename"> · </span>
-              {{ sizeLabel }}
+          <p v-if="externalAction || resolved.filename" class="text-dimmed text-xs">
+            <template v-if="externalAction">
+              {{ externalAction.hint }}
             </template>
-            <template v-else-if="resolved.filename">
-              <span> · </span>
-              示例包尚未放入仓库
+            <template v-else>
+              <span v-if="resolved.filename">{{ resolved.filename }}</span>
+              <template v-if="sizeLabel">
+                <span v-if="resolved.filename"> · </span>
+                {{ sizeLabel }}
+              </template>
+              <template v-else-if="resolved.filename">
+                <span> · </span>
+                示例包尚未放入仓库
+              </template>
             </template>
           </p>
         </div>
@@ -155,7 +190,18 @@ const showDocsLink = computed(() => {
         </UButton>
 
         <UButton
-          v-if="asset && resolved.href"
+          v-if="externalAction"
+          :href="resolved.href"
+          target="_blank"
+          external
+          color="neutral"
+          size="sm"
+          :icon="externalAction.icon"
+        >
+          {{ externalAction.label }}
+        </UButton>
+        <UButton
+          v-else-if="asset && resolved.href"
           :href="resolved.href"
           :download="resolved.filename"
           external

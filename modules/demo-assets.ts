@@ -66,7 +66,11 @@ export default defineNuxtModule({
     nuxt.options.runtimeConfig.public.demoAssets = assets;
 
     for (const demo of demoProjects) {
-      const key = demoAssetKey(demo);
+      if (!demo.filename) continue;
+      const key = demoAssetKey({
+        category: demo.category,
+        filename: demo.filename,
+      });
       if (!assets[key]) {
         console.warn(`[demo-assets] missing zip: public/downloads/${key}`);
       }
