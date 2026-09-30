@@ -6,6 +6,7 @@ import type { DocsCollectionItem } from "@nuxt/content";
  *
  * 无 TOC 时仍保留 UPageAside 占位，使内层 UPage 的 right 槽位有效、正文保持 lg:col-span-6。
  * 有 TOC 时在 Aside 内渲染 UContentToc；移动端菜单/TOC 条见 DocsAsideMobileBar。
+ * 右栏只有内层网格的 2 列，默认左右各 1.5rem 内边距会把长标题截成省略号，桌面端收掉这段内边距。
  */
 const props = defineProps<{
   page?: DocsCollectionItem | null;
@@ -32,6 +33,8 @@ const contentTocVariants = useUIConfig("contentToc");
       :links="links"
       :class="{ 'hidden lg:block': subNavigationMode }"
       :ui="{
+        root: 'lg:!px-0',
+        listWithChildren: '!ms-2',
         itemWithChildren: 'min-w-0',
         link: 'min-w-0',
         linkText: 'truncate',
