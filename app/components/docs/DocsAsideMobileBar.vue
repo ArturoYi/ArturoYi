@@ -5,6 +5,7 @@ defineProps<{
   links?: ContentTocLink[];
 }>();
 
+const route = useRoute();
 const { showCategorySidebar, sidebarNavigation, currentSection } =
   useSubNavigation();
 const { t } = useDocusI18n();
@@ -42,6 +43,8 @@ const tocDrawerOpen = ref(false);
 
       <template #body>
         <UContentNavigation
+          :key="route.path"
+          collapsible
           :navigation="sidebarNavigation"
           :highlight="contentNavVariants.highlight ?? true"
           :highlight-color="contentNavVariants.highlightColor"
@@ -51,6 +54,7 @@ const tocDrawerOpen = ref(false);
           trailing-icon="i-lucide-chevron-right"
           class="min-w-0"
           :ui="{
+            linkTrailing: 'inline-flex',
             linkTrailingIcon: 'group-data-[state=open]:rotate-90',
             list: 'min-w-0',
             listWithChildren: 'min-w-0',

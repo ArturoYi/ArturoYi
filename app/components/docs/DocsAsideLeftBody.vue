@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const route = useRoute();
 const { sidebarNavigation } = useSubNavigation();
 
 const contentNavVariants = useUIConfig("contentNavigation");
@@ -13,12 +14,17 @@ const navUi = {
   linkLabel: "min-w-0 truncate",
   linkTitle: "min-w-0 truncate",
   linkText: "min-w-0 truncate",
+  // Docus 默认把折叠箭头藏掉；分组可折叠后需要显示。
+  linkTrailing: "inline-flex",
 };
 </script>
 
 <template>
+  <!-- 带子页面的分组可折叠；当前文章所在分组默认展开，换页后仍展开该分组 -->
   <UContentNavigation
-    :collapsible="false"
+    :key="route.path"
+    collapsible
+    default-open
     :highlight="contentNavVariants.highlight ?? true"
     :highlight-color="contentNavVariants.highlightColor"
     :variant="contentNavVariants.variant ?? 'link'"

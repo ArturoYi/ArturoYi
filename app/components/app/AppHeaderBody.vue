@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // 移动端 header 抽屉：归档页 = 全部分类 Tab；文档页 = 当前栏目目录树
+const route = useRoute();
 const {
   showCategorySidebar,
   sidebarNavigation,
@@ -18,7 +19,9 @@ const navMenuVariants = useUIConfig("navigationMenu");
     <template v-if="showCategorySidebar">
       <USeparator class="lg:hidden" />
       <UContentNavigation
-        :collapsible="false"
+        :key="route.path"
+        collapsible
+        default-open
         :highlight="contentNavVariants.highlight ?? true"
         :highlight-color="contentNavVariants.highlightColor"
         :variant="contentNavVariants.variant ?? 'link'"
@@ -34,6 +37,7 @@ const navMenuVariants = useUIConfig("navigationMenu");
           linkLabel: 'min-w-0 truncate',
           linkTitle: 'min-w-0 truncate',
           linkText: 'min-w-0 truncate',
+          linkTrailing: 'inline-flex',
         }"
       />
     </template>

@@ -67,6 +67,17 @@ export const demoProjects: DemoProject[] = [
     icon: "i-lucide-lock",
     tags: ["Flutter", "本地存储"],
   },
+  {
+    id: "picdepot",
+    title: "PicDepot",
+    description:
+      "只靠 Cloudflare 的自建图床。元数据在 D1，文件在 R2，看图走公网直链。",
+    category: "web",
+    href: "https://github.com/ArturoYi/PicDepot",
+    docs: "/blog/picdepot",
+    icon: "i-lucide-images",
+    tags: ["Nuxt", "Cloudflare"],
+  },
 ];
 
 export function findDemoById(id: string): DemoProject | undefined {
