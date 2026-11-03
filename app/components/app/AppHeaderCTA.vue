@@ -7,7 +7,13 @@ const appConfig = useAppConfig();
 const nav = computed(
   () =>
     appConfig.navigation as
-      | { articlesPath?: string; demosPath?: string; demosLabel?: string }
+      | {
+          articlesPath?: string;
+          demosPath?: string;
+          demosLabel?: string;
+          filebedLabel?: string;
+          filebedUrl?: string;
+        }
       | undefined,
 );
 </script>
@@ -27,6 +33,15 @@ const nav = computed(
     <UButton
       :to="nav?.demosPath ?? '/demos'"
       :label="nav?.demosLabel ?? '示例'"
+      color="neutral"
+      variant="ghost"
+      :block="mobile"
+    />
+    <UButton
+      v-if="nav?.filebedUrl"
+      :to="nav.filebedUrl"
+      :label="nav.filebedLabel ?? '图床'"
+      target="_blank"
       color="neutral"
       variant="ghost"
       :block="mobile"

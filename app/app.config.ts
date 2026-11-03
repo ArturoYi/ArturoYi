@@ -25,6 +25,8 @@ export default defineAppConfig({
     articlesPath: "/articles",
     demosPath: "/demos",
     demosLabel: "示例",
+    filebedLabel: "图床",
+    filebedUrl: "https://filebed.cc.cd/",
   },
 
   // 全局 SEO 元信息

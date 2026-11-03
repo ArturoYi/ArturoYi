@@ -13,6 +13,8 @@ declare module "nuxt/schema" {
       articlesPath?: string;
       demosPath?: string;
       demosLabel?: string;
+      filebedLabel?: string;
+      filebedUrl?: string;
     };
   }
 
@@ -39,6 +41,8 @@ declare module "@nuxt/schema" {
       articlesPath?: string;
       demosPath?: string;
       demosLabel?: string;
+      filebedLabel?: string;
+      filebedUrl?: string;
     };
   }
 
