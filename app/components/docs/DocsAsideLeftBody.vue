@@ -11,9 +11,7 @@ const navUi = {
   item: "min-w-0",
   itemWithChildren: "min-w-0",
   link: "min-w-0",
-  linkLabel: "min-w-0 truncate",
   linkTitle: "min-w-0 truncate",
-  linkText: "min-w-0 truncate",
   // Docus 默认把折叠箭头藏掉；分组可折叠后需要显示。
   linkTrailing: "inline-flex",
 };

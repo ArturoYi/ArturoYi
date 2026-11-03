@@ -34,9 +34,7 @@ const navMenuVariants = useUIConfig("navigationMenu");
           item: 'min-w-0',
           itemWithChildren: 'min-w-0',
           link: 'min-w-0',
-          linkLabel: 'min-w-0 truncate',
           linkTitle: 'min-w-0 truncate',
-          linkText: 'min-w-0 truncate',
           linkTrailing: 'inline-flex',
         }"
       />

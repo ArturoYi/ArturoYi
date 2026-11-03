@@ -63,7 +63,11 @@ export default defineNuxtModule({
     const assets: Record<string, DemoAssetInfo> = {};
     collectZipAssets(demosDir, demosDir, assets);
 
-    nuxt.options.runtimeConfig.public.demoAssets = assets;
+    // Nuxt 会把本次扫描结果写成字面量类型，这里按声明的 Record 写回。
+    const publicConfig = nuxt.options.runtimeConfig.public as {
+      demoAssets: Record<string, DemoAssetInfo>;
+    };
+    publicConfig.demoAssets = assets;
 
     for (const demo of demoProjects) {
       if (!demo.filename) continue;

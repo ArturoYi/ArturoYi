@@ -10,6 +10,8 @@ const { hasLogo, headerLightUrl, headerDarkUrl, contextMenuItems } =
       :light="headerLightUrl"
       :dark="headerDarkUrl"
       :alt="appConfig.header?.logo?.alt || appConfig.header?.title"
+      width="800"
+      height="800"
       :class="['h-6 w-auto shrink-0', appConfig.header?.logo?.class]"
     />
   </UContextMenu>

@@ -1,5 +1,6 @@
 {
   "name": "ArturoYi",
+  "type": "module",
   "description": "个人技术博客与知识库 — 基于 Nuxt 4 + Docus 构建",
   "scripts": {
     "dev": "nuxt dev",
@@ -9,35 +10,36 @@
   },
   "pnpm": {
     "overrides": {
-      "nuxt-og-image": "6.7.8"
+      "nuxt-og-image": "6.10.4"
     }
   },
   "dependencies": {
-    "@iconify-json/logos": "^1.2.13",
-    "@iconify-json/lucide": "^1.2.120",
-    "@iconify-json/simple-icons": "^1.2.92",
-    "@iconify-json/vscode-icons": "^1.2.67",
-    "@nuxt/content": "^3.15.2",
+    "@iconify-json/logos": "^1.2.18",
+    "@iconify-json/lucide": "^1.2.150",
+    "@iconify-json/simple-icons": "^1.2.101",
+    "@iconify-json/vscode-icons": "^1.2.95",
+    "@nuxt/content": "^3.16.2",
     "better-sqlite3": "^12.11.1",
     "docus": "latest",
-    "nuxt": "^4.4.8",
-    "opentype.js": "^2.0.0"
+    "nuxt": "^4.6.4",
+    "opentype.js": "^2.0.0",
+    "ufo": "^1.6.4"
   },
   "devDependencies": {
-    "@nuxt/kit": "^4.5.1",
-    "@nuxt/schema": "^4.5.1",
-    "@vueuse/core": "^14.3.0",
+    "@nuxt/kit": "^4.6.4",
+    "@nuxt/schema": "^4.6.4",
+    "@vueuse/core": "^15.0.0",
     "debug": "^4.4.3",
     "extend": "^3.0.2",
-    "parse5": "^8.0.1",
+    "parse5": "^8.1.0",
     "rehype-raw": "^7.0.0",
-    "reka-ui": "2.10.1",
+    "reka-ui": "2.11.0",
     "remark-emoji": "^5.0.2",
     "remark-gfm": "^4.0.1",
     "remark-mdc": "^3.11.1",
     "remark-rehype": "^11.1.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.2.0"
   }
 }

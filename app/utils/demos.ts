@@ -24,11 +24,11 @@ export function fallbackDemoCategoryTitle(category: string): string {
 
 export function resolveDemoCategoryMeta(
   category: string,
-  navCategories: ReadonlyArray<Pick<ContentNavigationItem, "title" | "stem" | "icon">>,
+  navCategories: readonly ContentNavigationItem[],
 ): { title: string; icon?: string; token: string } {
   const token = normalizeCategoryToken(category);
   const match = navCategories.find((item) => {
-    const stem = getCategoryStemFromItem(item as unknown as ContentNavigationItem);
+    const stem = getCategoryStemFromItem(item);
     return !!stem && normalizeCategoryToken(stem) === token;
   });
 

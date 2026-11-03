@@ -27,6 +27,15 @@ export default defineNuxtConfig({
   // 启用服务端渲染，首屏更快且利于 SEO
   ssr: true,
 
+  // Nuxt 4.6 未设置 host 时会把 devServer.host 解析成 {}，dev 命令会崩溃。
+  devServer: {
+    host:
+      process.env.NUXT_HOST ||
+      process.env.NITRO_HOST ||
+      process.env.HOST ||
+      "localhost",
+  },
+
   // Nitro 服务端引擎配置
   nitro: {
     prerender: {
@@ -34,8 +43,8 @@ export default defineNuxtConfig({
       crawlLinks: true,
       // 单个路由预渲染失败时不中断整体构建
       failOnError: false,
-      // 示例 zip 由 server/routes 按需输出，不预渲染成 HTML
-      ignore: ["/downloads/**"],
+      // 静态资源走文件，不预渲染成 HTML
+      ignore: ["/downloads/**", "/_nuxt/**", "/images/**"],
     },
   },
 
@@ -53,10 +62,28 @@ export default defineNuxtConfig({
 
   // 路由级别规则，覆盖全局预渲染与 robots 行为
   routeRules: {
-    // 默认所有路由静态预渲染
-    "/**": { prerender: true },
+    // 文档 HTML 可被 CDN 缓存，但每次都要向源站确认是否更新
+    "/**": {
+      prerender: true,
+      headers: { "cache-control": "public, max-age=0, must-revalidate" },
+    },
+    // 构建产物文件名带哈希，可以长期缓存
+    "/_nuxt/**": {
+      prerender: false,
+      headers: { "cache-control": "public, max-age=31536000, immutable" },
+    },
+    "/images/**": {
+      prerender: false,
+      headers: { "cache-control": "public, max-age=2592000" },
+    },
+    "/favicon.ico": {
+      headers: { "cache-control": "public, max-age=2592000" },
+    },
     // 示例 zip：不预渲染，避免 Docus 把它当成文档页
-    "/downloads/**": { prerender: false },
+    "/downloads/**": {
+      prerender: false,
+      headers: { "cache-control": "public, max-age=86400" },
+    },
     // 面试栏目没有落地页，根路径落到第一篇真题
     "/interview": { redirect: "/interview/flutter-interview1" },
   },

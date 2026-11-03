@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
-import { useWindowScroll, useMouse } from "@vueuse/core";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { useThrottleFn } from "@vueuse/core";
 
 const isMounted = ref(false);
 const reduceMotion = ref(false);
-const { y: scrollY } = useWindowScroll();
-const { x: mouseX, y: mouseY } = useMouse();
+const scrollY = ref(0);
+const updateScroll = useThrottleFn(() => {
+  scrollY.value = window.scrollY;
+}, 32);
 
 onMounted(() => {
   isMounted.value = true;
   reduceMotion.value = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
+  updateScroll();
+  window.addEventListener("scroll", updateScroll, { passive: true });
+});
+
+onUnmounted(() => {
+  if (!import.meta.client) return;
+  window.removeEventListener("scroll", updateScroll);
 });
 
 const canAnimate = computed(() => isMounted.value && !reduceMotion.value);
@@ -24,35 +33,17 @@ const gridStyle = computed(() => {
   };
 });
 
-const spotlightStyle = computed(() => {
-  if (!canAnimate.value) {
-    return {
-      background:
-        "radial-gradient(520px circle at 50% 28%, color-mix(in srgb, var(--ui-primary) 14%, transparent), transparent 62%)",
-    };
-  }
-  return {
-    background: `radial-gradient(460px circle at ${mouseX.value}px ${mouseY.value}px, color-mix(in srgb, var(--ui-primary) 18%, transparent), transparent 62%)`,
-  };
-});
-
 const orbAStyle = computed(() => {
   if (!canAnimate.value) return {};
-  const x =
-    (mouseX.value - (import.meta.client ? window.innerWidth / 2 : 0)) * 0.04;
-  const y = scrollY.value * -0.12;
   return {
-    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`,
+    transform: `translate3d(0, ${(scrollY.value * -0.12).toFixed(1)}px, 0)`,
   };
 });
 
 const orbBStyle = computed(() => {
   if (!canAnimate.value) return {};
-  const x =
-    (mouseX.value - (import.meta.client ? window.innerWidth / 2 : 0)) * -0.05;
-  const y = scrollY.value * -0.08;
   return {
-    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`,
+    transform: `translate3d(0, ${(scrollY.value * -0.08).toFixed(1)}px, 0)`,
   };
 });
 </script>
@@ -66,8 +57,6 @@ const orbBStyle = computed(() => {
       class="dot-grid absolute -top-24 inset-x-0 h-[calc(100%+12rem)] opacity-70 dark:opacity-50"
       :style="gridStyle"
     />
-
-    <div class="absolute inset-0 transition-[background] duration-200 ease-out" :style="spotlightStyle" />
 
     <div
       class="absolute top-[-8%] left-[12%] h-[28rem] w-[28rem] rounded-full bg-primary/15 dark:bg-primary/20 blur-[90px]"

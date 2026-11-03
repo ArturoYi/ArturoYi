@@ -43,9 +43,9 @@ export default defineAppConfig({
     title: "ArturoYi",
     logo: {
       // 浅色模式下的 Logo 图片 URL，留空则仅显示文字标题
-      light: "/images/arturoyi-avatar.jpg",
+      light: "/images/arturoyi-avatar.webp",
       // 深色模式下的 Logo 图片 URL
-      dark: "/images/arturoyi-avatar.jpg",
+      dark: "/images/arturoyi-avatar.webp",
       // Logo 图片的 alt 文本，用于无障碍访问
       alt: "ArturoYi",
       class: "rounded-full object-cover",
@@ -102,9 +102,24 @@ export default defineAppConfig({
       codeIcon: {
         python: "i-vscode-icons-file-type-python",
         kotlin: "i-vscode-icons-file-type-kotlin",
+        kt: "i-vscode-icons-file-type-kotlin",
         swift: "i-vscode-icons-file-type-swift",
         dart: "i-vscode-icons-file-type-dartlang",
         javascript: "i-vscode-icons-file-type-js",
+        js: "i-vscode-icons-file-type-js",
+        cpp: "i-vscode-icons-file-type-cpp",
+        c: "i-vscode-icons-file-type-c",
+        java: "i-vscode-icons-file-type-java",
+        ruby: "i-vscode-icons-file-type-ruby",
+        rb: "i-vscode-icons-file-type-ruby",
+        xml: "i-vscode-icons-file-type-xml",
+        bash: "i-vscode-icons-file-type-shell",
+        sh: "i-vscode-icons-file-type-shell",
+        shell: "i-vscode-icons-file-type-shell",
+        toml: "i-vscode-icons-file-type-toml",
+        cmake: "i-vscode-icons-file-type-cmake",
+        objc: "i-vscode-icons-file-type-objectivec",
+        text: "i-vscode-icons-file-type-text",
       },
       img: {
         slots: {

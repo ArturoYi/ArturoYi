@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     | undefined;
 
   const slug = getRouterParams(event)["slug.md"];
-  if (!slug?.endsWith(".md") || llmsConfig?.contentRawMarkdown === false) {
+  if (!slug?.endsWith(".md")) {
     throw createError({
       statusCode: 404,
       statusMessage: "Page not found",
@@ -26,10 +26,12 @@ export default defineEventHandler(async (event) => {
     path = path.slice(0, -6);
   }
 
+  // agent-discovery 会把 contentRawMarkdown 设为 false，只表示关掉 Content 内置路由。
+  const rawConfig = llmsConfig?.contentRawMarkdown;
   const excludeCollections =
-    (typeof llmsConfig?.contentRawMarkdown === "object" &&
-      llmsConfig.contentRawMarkdown.excludeCollections) ||
-    [];
+    rawConfig && typeof rawConfig === "object"
+      ? rawConfig.excludeCollections || []
+      : [];
 
   const pageCollections = Object.entries(collections)
     .filter(
