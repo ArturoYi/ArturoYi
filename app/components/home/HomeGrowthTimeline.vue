@@ -218,7 +218,7 @@ const getWatermarkStyle = (index: number) => {
       <!-- 贯穿居中时间轴线 -->
       <div
         aria-hidden="true"
-        class="absolute left-6 md:left-1/2 top-4 bottom-8 -translate-x-1/2 w-px bg-gradient-to-b from-neutral-200 via-neutral-300 dark:from-neutral-800 dark:via-neutral-700 to-transparent"
+        class="absolute left-10 sm:left-12 md:left-1/2 top-4 bottom-8 -translate-x-1/2 w-px bg-gradient-to-b from-neutral-200 via-neutral-300 dark:from-neutral-800 dark:via-neutral-700 to-transparent"
       />
 
       <div class="space-y-16 sm:space-y-24">
@@ -248,13 +248,13 @@ const getWatermarkStyle = (index: number) => {
 
           <!-- 侧 A：开放式轻量足迹区（无多余背景框，聚焦年份与技术要点，与对侧文案 0 重复） -->
           <div
-            class="w-full md:w-1/2 pl-12 md:pl-0"
+            class="w-full min-w-0 md:w-1/2 pl-12 md:pl-0"
             :class="index % 2 === 0 ? 'md:text-right md:pr-10' : 'md:text-left md:pl-10'"
           >
             <div class="space-y-3">
               <!-- 年份大字与阶段徽标 -->
               <div
-                class="flex items-center gap-3"
+                class="flex flex-wrap items-center gap-3"
                 :class="index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'"
               >
                 <span class="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-neutral-900 dark:text-white">
@@ -268,12 +268,12 @@ const getWatermarkStyle = (index: number) => {
               <!-- 文章标题链接（简洁可点） -->
               <NuxtLink
                 :to="item.path"
-                class="group/link inline-flex items-center gap-1.5 text-base sm:text-lg font-bold text-neutral-800 dark:text-neutral-100 hover:text-primary dark:hover:text-primary transition-colors"
+                class="group/link inline-flex max-w-full items-center gap-1.5 text-base sm:text-lg font-bold text-neutral-800 dark:text-neutral-100 hover:text-primary dark:hover:text-primary transition-colors"
               >
-                <span>{{ item.title }}</span>
+                <span class="min-w-0 break-words">{{ item.title }}</span>
                 <UIcon
                   name="i-lucide-arrow-up-right"
-                  class="h-4 w-4 text-neutral-400 group-hover/link:text-primary group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                  class="h-4 w-4 shrink-0 text-neutral-400 group-hover/link:text-primary group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
                 />
               </NuxtLink>
 
@@ -290,7 +290,7 @@ const getWatermarkStyle = (index: number) => {
                   :class="index % 2 === 0 ? 'md:flex-row-reverse text-left md:text-right' : 'text-left'"
                 >
                   <span class="text-primary font-bold select-none shrink-0">&gt;</span>
-                  <span>{{ point }}</span>
+                  <span class="min-w-0 break-words">{{ point }}</span>
                 </div>
               </div>
 
@@ -312,10 +312,10 @@ const getWatermarkStyle = (index: number) => {
           </div>
 
           <!-- 侧 B：黑白极客年度金句卡片（主题自适应，复制相融，500ms 悬浮缩放，视觉核心聚焦） -->
-          <div class="w-full md:w-1/2 pl-12 md:pl-0">
+          <div class="w-full min-w-0 md:w-1/2 pl-12 md:pl-0">
             <NuxtLink
               :to="item.path"
-              class="group/quote relative block rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md p-5 sm:p-6 shadow-xs hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-500 ease-out hover:scale-[1.02] overflow-hidden"
+              class="group/quote relative block rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md p-5 sm:p-6 shadow-xs hover:shadow-xl hover:border-neutral-300 dark:hover:border-neutral-700 transition-all duration-500 ease-out md:hover:scale-[1.02] overflow-hidden"
             >
               <!-- 悬浮背景淡光晕 -->
               <div
@@ -323,14 +323,14 @@ const getWatermarkStyle = (index: number) => {
               />
 
               <!-- 顶部极客工具栏与复制按钮 -->
-              <div class="flex items-center justify-between gap-2 mb-4">
-                <div class="flex items-center gap-2">
-                  <div class="flex items-center gap-1 select-none">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <div class="flex min-w-0 items-center gap-2">
+                  <div class="flex shrink-0 items-center gap-1 select-none">
                     <span class="h-2 w-2 rounded-full bg-red-400/80 dark:bg-red-500/70" />
                     <span class="h-2 w-2 rounded-full bg-amber-400/80 dark:bg-amber-500/70" />
                     <span class="h-2 w-2 rounded-full bg-emerald-400/80 dark:bg-emerald-500/70" />
                   </div>
-                  <span class="text-xs font-mono text-neutral-400 dark:text-neutral-500">
+                  <span class="min-w-0 break-all text-xs font-mono text-neutral-400 dark:text-neutral-500">
                     // {{ item.year }}_THOUGHT
                   </span>
                 </div>
@@ -339,7 +339,7 @@ const getWatermarkStyle = (index: number) => {
                 <button
                   type="button"
                   :title="copiedPath === item.path ? '已复制到剪贴板' : '复制年度独白'"
-                  class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all duration-200 border cursor-pointer select-none"
+                  class="flex shrink-0 items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all duration-200 border cursor-pointer select-none"
                   :class="
                     copiedPath === item.path
                       ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30 dark:border-emerald-500/30 shadow-xs'

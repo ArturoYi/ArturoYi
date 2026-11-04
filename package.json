@@ -8,11 +8,6 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview"
   },
-  "pnpm": {
-    "overrides": {
-      "nuxt-og-image": "6.10.4"
-    }
-  },
   "dependencies": {
     "@iconify-json/logos": "^1.2.18",
     "@iconify-json/lucide": "^1.2.150",

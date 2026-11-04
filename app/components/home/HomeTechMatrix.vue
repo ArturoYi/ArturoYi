@@ -2,7 +2,7 @@
 const tools = [
   { name: "Android", icon: "i-logos-android-icon" },
   { name: "iOS", icon: "i-logos-apple", class: "dark:invert" },
-  { name: "Flutter", icon: "i-logos-flutter" },
+  { name: "Flutter", icon: "i-logos-flutter-icon" },
   { name: "Vue", icon: "i-logos-vue" },
 ];
 </script>

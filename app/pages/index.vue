@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HomeParallaxBackground from "../components/home/HomeParallaxBackground.vue";
+import HomeDotGrid from "../components/home/HomeDotGrid.vue";
 import HomeHeroTerminal from "../components/home/HomeHeroTerminal.vue";
 import HomeTechMatrix from "../components/home/HomeTechMatrix.vue";
 import HomeGrowthTimeline from "../components/home/HomeGrowthTimeline.vue";
@@ -32,8 +32,7 @@ const heroHeadline = "对自己说点什么。";
 
 <template>
   <div class="relative min-h-screen overflow-x-hidden selection:bg-neutral-900 selection:text-white dark:selection:bg-neutral-100 dark:selection:text-neutral-900">
-    <!-- 全局视差点阵与鼠标跟随光晕 -->
-    <HomeParallaxBackground />
+    <HomeDotGrid />
 
     <div class="relative z-10">
       <!-- 顶部 Hero 区域 -->
