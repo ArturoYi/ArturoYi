@@ -5,6 +5,7 @@ packages:
 # Docus 5.15 依赖 nuxt-og-image ~6.10.3。钉到该范围内最新的 6.10.4。
 # 7.x 要求的 Nuxt 范围与 Docus 的 ~6.10.3 不兼容。
 # pnpm 11 只从 pnpm-workspace.yaml 读 overrides，不再读 package.json 的 pnpm 字段。
+# Workers Builds 默认是 pnpm 9，只认 package.json。package.json 的 packageManager 把它钉到同一版 pnpm 11。
 overrides:
   nuxt-og-image: 6.10.4
 

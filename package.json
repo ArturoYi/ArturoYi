@@ -1,6 +1,7 @@
 {
   "name": "ArturoYi",
   "type": "module",
+  "packageManager": "pnpm@11.5.2",
   "description": "个人技术博客与知识库 — 基于 Nuxt 4 + Docus 构建",
   "scripts": {
     "dev": "nuxt dev",
