@@ -27,4 +27,10 @@ declare module "#unpublished-content-paths" {
   export const unpublishedContentPaths: readonly string[];
 }
 
+declare module "#raw-markdown-sources" {
+  /** 文档 path → content/ 原文，由 modules/raw-markdown 在构建期写入 */
+  const sources: Record<string, string>;
+  export default sources;
+}
+
 export {};
