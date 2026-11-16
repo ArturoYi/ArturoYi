@@ -68,6 +68,17 @@ export const demoProjects: DemoProject[] = [
     tags: ["Flutter", "本地存储"],
   },
   {
+    id: "fast-package",
+    title: "fast_package",
+    description:
+      "轻量 Flutter 工具包。防抖节流、异步队列、Toast、刷新、侧滑和动画列表，只依赖 Flutter SDK。",
+    category: "flutter",
+    href: "https://github.com/ArturoYi/fast_package",
+    docs: "/blog/fast-package",
+    icon: "i-simple-icons-flutter",
+    tags: ["Flutter", "UI"],
+  },
+  {
     id: "picdepot",
     title: "PicDepot",
     description:
